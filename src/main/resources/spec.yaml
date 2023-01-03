@@ -1,0 +1,188 @@
+openapi: 3.0.1
+info:
+  title: Zoo API
+  description: CRUD operations to interact with ZOO system
+  version: 1.0.0
+servers:
+  - url: 'https'
+
+tags:
+  - name: zoo
+
+paths:
+  /zones:
+    post:
+      tags:
+        - zoo
+      operationId: addZone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ZoneCreationDto"
+      responses:
+        '201':
+          description: Zone has been created
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /zones/{zoneId}:
+    post:
+      tags:
+        - zoo
+      operationId: addAnimal
+      parameters:
+        - $ref: "#/components/parameters/zoneId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalAssigmentDto"
+      responses:
+        '201':
+          description: Created animal and assigned it to the zone
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+    get:
+      tags:
+        - zoo
+      operationId: getAnimals
+      parameters:
+        - $ref: "#/components/parameters/zoneId"
+      responses:
+        '200':
+          description: Successfully acquired all animals for given zone
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Animal"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /zones/{zoneId}/{animalName}:
+    get:
+      tags:
+        - zoo
+      operationId: getAnimal
+      parameters:
+        - $ref: "#/components/parameters/zoneId"
+        - in: path
+          name: animalName
+          required: true
+          schema:
+            type: string
+            pattern: '^[A-Za-z]+$'
+            description: Animal name which should be a single word
+      responses:
+        '200':
+          description: Successfully acquired the animal for given zone
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Animal"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /zones/which-requires-most-food:
+    get:
+      tags:
+        - zoo
+      description: Returns the zone where the most amount of food is required
+      operationId: getZoneWhichRequiresMostFood
+      responses:
+        '200':
+          description: Successfully acquired the zone where the most amount of food is required
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Zone"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /zones/where-live-least-animals:
+    get:
+      tags:
+        - zoo
+      description: Returns the zone where live least amount of animals
+      operationId: zoneWhereLiveLeastAnimals
+      responses:
+        '200':
+          description: Successfully acquired the zone where live least amount of animals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Zone"
+        '500':
+          $ref: "#/components/responses/ServerError"
+
+components:
+  responses:
+    ClientError:
+      description: Client error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ServerError:
+      description: Server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  parameters:
+    zoneId:
+      in: path
+      name: id
+      description: Zone id
+      required: true
+      schema:
+        type: integer
+  schemas:
+    ZoneCreationDto:
+      type: object
+      properties:
+        name:
+          type: string
+    AnimalAssigmentDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Animal's name
+        type:
+          type: string
+          description: Animal's type
+          enum:
+            - ELEPHANT
+            - LION
+            - BUNNY
+    Animal:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AnimalAssigmentDto"
+      properties:
+            id:
+              type: integer
+              description: Animal id
+    Zone:
+      allOf:
+        - $ref: "#/components/schemas/ZoneCreationDto"
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+            - NOT_FOUND
