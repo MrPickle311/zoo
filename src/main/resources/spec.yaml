@@ -22,7 +22,11 @@ paths:
               $ref: "#/components/schemas/ZoneCreationDto"
       responses:
         '201':
-          description: Zone has been created
+          description: Zone has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingZone"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
@@ -155,6 +159,11 @@ components:
       properties:
         name:
           type: string
+          nullable: false
+          pattern: '^[A-Za-z]+$'
+          description: Zone name which should be without whitespaces
+      required:
+        - name
     AnimalAssigmentDto:
       type: object
       properties:
@@ -173,9 +182,9 @@ components:
       allOf:
         - $ref: "#/components/schemas/AnimalAssigmentDto"
       properties:
-            id:
-              type: integer
-              description: Animal id
+        id:
+          type: integer
+          description: Animal id
     ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"
@@ -184,5 +193,11 @@ components:
       properties:
         code:
           type: string
-          enum:
-            - NOT_FOUND
+      required:
+        - code
+    ErrorCode:
+      type: string
+      enum:
+        - ALREADY_EXISTS
+        - NOT_FOUND
+        - INVALID_INPUT_DATA
