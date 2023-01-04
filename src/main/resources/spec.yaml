@@ -60,7 +60,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Animal"
+                  $ref: "#/components/schemas/ExistingAnimal"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
@@ -87,7 +87,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Animal"
+                  $ref: "#/components/schemas/ExistingAnimal"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
@@ -106,7 +106,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Zone"
+                  $ref: "#/components/schemas/ExistingZone"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/where-live-least-animals:
@@ -123,7 +123,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Zone"
+                  $ref: "#/components/schemas/ExistingZone"
         '500':
           $ref: "#/components/responses/ServerError"
 
@@ -144,7 +144,7 @@ components:
   parameters:
     zoneId:
       in: path
-      name: id
+      name: zoneId
       description: Zone id
       required: true
       schema:
@@ -168,7 +168,7 @@ components:
             - ELEPHANT
             - LION
             - BUNNY
-    Animal:
+    ExistingAnimal:
       type: object
       allOf:
         - $ref: "#/components/schemas/AnimalAssigmentDto"
@@ -176,7 +176,7 @@ components:
             id:
               type: integer
               description: Animal id
-    Zone:
+    ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"
     Error:

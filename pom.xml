@@ -20,6 +20,8 @@
         <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <h2.version>2.1.214</h2.version>
+        <hibernate-validator.version>6.2.3.Final</hibernate-validator.version>
     </properties>
     <dependencies>
         <dependency>
@@ -72,7 +74,12 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <version>${h2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate-validator.version}</version>
         </dependency>
     </dependencies>
 
