@@ -21,7 +21,10 @@
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <validation-api.version>2.0.1.Final</validation-api.version>
         <h2.version>2.1.214</h2.version>
-        <hibernate-validator.version>6.2.3.Final</hibernate-validator.version>
+        <hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
+        <modelmapper.version>3.0.0</modelmapper.version>
+        <mockito-junit-jupiter.version>4.8.1</mockito-junit-jupiter.version>
+        <jackson-datatype-jsr310.version>2.14.1</jackson-datatype-jsr310.version>
     </properties>
     <dependencies>
         <dependency>
@@ -36,6 +39,11 @@
             <groupId>io.swagger.core.v3</groupId>
             <artifactId>swagger-annotations</artifactId>
             <version>${swagger-annotations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-datatype-jsr310.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openapitools</groupId>
@@ -70,6 +78,17 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+            <version>${mockito-junit-jupiter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -110,6 +129,7 @@
                             <inputSpec>${project.basedir}/src/main/resources/spec.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <library>spring-boot</library>
+                            <packageName>com.zoo.openapi</packageName>
                             <apiPackage>com.zoo.openapi.api</apiPackage>
                             <modelPackage>com.zoo.openapi.model</modelPackage>
                             <!--              this template is from the following Github repository but has been modified-->
@@ -122,6 +142,11 @@
                                 <generateForOpenFeign>true</generateForOpenFeign>
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <java8>true</java8>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder
+                                    @lombok.AllArgsConstructor
+                                    @lombok.NoArgsConstructor
+                                </additionalModelTypeAnnotations>
                             </configOptions>
                         </configuration>
                     </execution>
