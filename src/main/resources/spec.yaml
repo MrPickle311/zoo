@@ -56,6 +56,31 @@ paths:
       operationId: getAnimals
       parameters:
         - $ref: "#/components/parameters/zoneId"
+        - in: query
+          name: size
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: page
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - in: query
+          name: shouldSortByName
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: sortDirection
+          required: false
+          schema:
+            type: string
+            enum:
+              - ASC
+              - DESC
       responses:
         '200':
           description: Successfully acquired all animals for given zone
@@ -204,5 +229,5 @@ components:
       type: string
       enum:
         - ALREADY_EXISTS
-        - NOT_FOUND
+        - ZONE_NOT_FOUND
         - INVALID_INPUT_DATA
