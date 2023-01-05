@@ -8,6 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Set;
@@ -20,6 +23,8 @@ class JpaSchemaTests {
     public static final String SAMPLE_ZONE = "FunnyZone";
     @Autowired
     private ZoneRepository zoneRepository;
+    @Autowired
+    private AnimalRepository animalRepository;
 
     @Test
     void zoneRepositoryShouldBeNotNull() {
@@ -40,14 +45,6 @@ class JpaSchemaTests {
             Zone zones = zoneRepository.findById(1).get();
             Set<AnimalType> animalTypes = zones.getAnimalTypes();
             assertEquals(1, animalTypes.size());
-        }
-
-        @Test
-        void shouldContainAnimals() {
-            Zone zones = zoneRepository.findById(1).get();
-            List<AnimalType> animalTypes = zones.getAnimalTypes().stream().toList();
-            Set<Animal> animals = animalTypes.get(0).getAnimals();
-            assertEquals(2, animals.size());
         }
 
         @Test
@@ -79,5 +76,43 @@ class JpaSchemaTests {
     @Nested
     class WhenManipulatingAnimalTypes {
 
+        @Test
+        void shouldGetAnimalsFromZone() {
+            Zone zones = zoneRepository.findById(1).get();
+            List<AnimalType> animalTypes = zones.getAnimalTypes().stream().toList();
+            Set<Animal> animals = animalTypes.get(0).getAnimals();
+            assertEquals(2, animals.size());
+        }
+
+        @Test
+        void shouldNotGetAnimalsIfZoneDoesNotExists() {
+            assertTrue(zoneRepository.findById(111).isEmpty());
+        }
+
+        @Test
+        void shouldGetAnimalsByZoneIdPaged() {
+            Sort sort = Sort
+                    .by("name")
+                    .ascending();
+            Pageable pageable = PageRequest.of(0, 2, sort);
+            var result = animalRepository.findByAnimalType_Zone_Id(1, pageable);
+            assertEquals(2, result.size());
+        }
+
+        @Test
+        void shouldGetAnimalsByZoneIdNotPaged() {
+            var result = animalRepository.findByAnimalType_Zone_Id(1, Pageable.unpaged());
+            assertEquals(2, result.size());
+        }
+
+        @Test
+        void zoneShouldExists(){
+            assertTrue(animalRepository.existsByAnimalType_Zone_Id(1));
+        }
+
+        @Test
+        void zoneShouldNotExists(){
+            assertFalse(animalRepository.existsByAnimalType_Zone_Id(111));
+        }
     }
 }
