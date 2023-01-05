@@ -15,7 +15,6 @@ public class ZoneService {
 
     private final ZoneRepository zoneRepository;
     private final ModelMapper modelMapper;
-
     private final ZoneCreationValidator zoneCreationValidator;
 
     public ExistingZone addZone(ZoneCreationDto zoneCreationDto) {
