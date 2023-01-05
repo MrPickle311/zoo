@@ -1,16 +1,15 @@
-package com.zoo.service.validation.ready;
+package com.zoo.service.validation.simple;
 
 import com.zoo.exception.DataValidationException;
 import com.zoo.openapi.model.ErrorCode;
 import com.zoo.openapi.model.ZoneCreationDto;
 import com.zoo.repository.ZoneRepository;
-import com.zoo.service.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ZoneNameValidator implements Validator<ZoneCreationDto> {
+public class ZoneNameSimpleValidator implements SimpleValidator<ZoneCreationDto> {
 
     private final ZoneRepository zoneRepository;
 

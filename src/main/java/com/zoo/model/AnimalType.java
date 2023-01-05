@@ -22,10 +22,6 @@ public class AnimalType {
     @Column(name = "required_food_per_day")
     private int requiredFoodPerDay;
 
-    @ManyToOne
-    @JoinColumn(name = "zone_id")
-    private Zone zone;
-
     @OneToMany(mappedBy = "animalType")
     private Set<Animal> animals;
 }

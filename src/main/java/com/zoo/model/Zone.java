@@ -22,5 +22,5 @@ public class Zone {
     private String name;
 
     @OneToMany(mappedBy = "zone")
-    private Set<AnimalType> animalTypes;
+    private Set<Animal> animals;
 }
