@@ -4,7 +4,7 @@ import com.zoo.config.ModelMapperConfiguration;
 import com.zoo.model.Zone;
 import com.zoo.openapi.model.ZoneCreationDto;
 import com.zoo.repository.ZoneRepository;
-import com.zoo.service.validation.ready.ZoneCreationValidator;
+import com.zoo.service.validation.complex.ZoneCreationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

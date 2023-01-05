@@ -1,5 +1,6 @@
-package com.zoo.service.validation;
+package com.zoo.service.validation.complex;
 
+import com.zoo.service.validation.simple.Validator;
 import lombok.Setter;
 
 import java.util.Set;

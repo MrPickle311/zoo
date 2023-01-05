@@ -4,7 +4,7 @@ import com.zoo.model.Zone;
 import com.zoo.openapi.model.ExistingZone;
 import com.zoo.openapi.model.ZoneCreationDto;
 import com.zoo.repository.ZoneRepository;
-import com.zoo.service.validation.ready.ZoneCreationValidator;
+import com.zoo.service.validation.complex.ZoneCreationValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

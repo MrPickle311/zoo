@@ -1,5 +1,7 @@
-package com.zoo.service.validation.ready;
+package com.zoo.config;
 
+import com.zoo.service.validation.complex.ZoneCreationValidator;
+import com.zoo.service.validation.simple.ZoneNameValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
