@@ -1,15 +1,15 @@
 package com.zoo.service.validation.complex;
 
-import com.zoo.service.validation.simple.Validator;
-import lombok.Setter;
+import com.zoo.service.validation.simple.SimpleValidator;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
-@Setter
+@RequiredArgsConstructor
 public abstract class ComplexValidator<T> {
-    private Set<Validator<T>> validators;
+    private final Set<SimpleValidator<T>> simpleValidators;
 
     public void validate(T untilValidation) {
-        validators.forEach(v -> v.validate(untilValidation));
+        simpleValidators.forEach(v -> v.validate(untilValidation));
     }
 }

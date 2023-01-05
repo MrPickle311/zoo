@@ -1,5 +1,5 @@
 package com.zoo.service.validation.simple;
 
-public interface Validator<T> {
+public interface SimpleValidator<T> {
     void validate(T untilValidation);
 }

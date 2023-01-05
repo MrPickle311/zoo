@@ -1,7 +1,7 @@
 package com.zoo.config;
 
 import com.zoo.service.validation.complex.ZoneCreationValidator;
-import com.zoo.service.validation.simple.ZoneNameValidator;
+import com.zoo.service.validation.simple.ZoneNameSimpleValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +12,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ValidatorsConfiguration {
 
-    private final ZoneNameValidator zoneNameValidator;
+    private final ZoneNameSimpleValidator zoneNameValidator;
 
     @Bean
     public ZoneCreationValidator zoneInsertionValidator() {
-        var validator = new ZoneCreationValidator();
-        validator.setValidators(Set.of(zoneNameValidator));
-        return validator;
+        return new ZoneCreationValidator(Set.of(zoneNameValidator));
     }
 }
