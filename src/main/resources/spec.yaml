@@ -288,6 +288,10 @@ components:
         code:
           type: string
           example: ALREADY_EXISTS
+        description:
+          type: string
+          default: ""
+          example: "addAnimal.zoneId: must be greater than or equal to 0"
       required:
         - code
     ErrorCode:

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
+
 @RestControllerAdvice
 @Slf4j
 public class ZooExceptionHandler {
@@ -19,6 +21,7 @@ public class ZooExceptionHandler {
         log.warn("Data validation failed with error code: {}", e.getErrorCode());
         return Error.builder()
                 .code(e.getErrorCode().toString())
+                .description("Business data validation failed")
                 .build();
     }
 
@@ -28,6 +31,27 @@ public class ZooExceptionHandler {
         log.warn("Data validation failed with error code: {}", e.getMessage());
         return Error.builder()
                 .code(ErrorCode.INVALID_INPUT_DATA.toString())
+                .description(e.getFieldErrors().toString())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PrzekroczonyLimitJedzeniaException.class)
+    public Error handleMethodArgumentNotValidException(PrzekroczonyLimitJedzeniaException e) {
+        log.warn("Zone has not enough food: {}", e.getMessage());
+        return Error.builder()
+                .code(e.getErrorCode().toString())
+                .description("The zone does not may contain more food")
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Error handleMethodArgumentNotValidException(ConstraintViolationException e) {
+        log.warn("Zone has not enough food: {}", e.getMessage());
+        return Error.builder()
+                .code(ErrorCode.INVALID_INPUT_DATA.toString())
+                .description(e.getConstraintViolations().toString())
                 .build();
     }
 }
