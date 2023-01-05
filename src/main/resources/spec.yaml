@@ -31,7 +31,7 @@ paths:
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/{zoneId}:
+  /animals/{zoneId}:
     post:
       tags:
         - zoo
@@ -56,31 +56,10 @@ paths:
       operationId: getAnimals
       parameters:
         - $ref: "#/components/parameters/zoneId"
-        - in: query
-          name: size
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-        - in: query
-          name: page
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-        - in: query
-          name: shouldSortByName
-          required: false
-          schema:
-            type: boolean
-        - in: query
-          name: sortDirection
-          required: false
-          schema:
-            type: string
-            enum:
-              - ASC
-              - DESC
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/shouldSortByName"
+        - $ref: "#/components/parameters/sortDirection"
       responses:
         '200':
           description: Successfully acquired all animals for given zone
@@ -94,14 +73,15 @@ paths:
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/{zoneId}/{animalName}:
+  /animals:
     get:
       tags:
         - zoo
-      operationId: getAnimal
+      operationId: getAnimalsByName
       parameters:
-        - $ref: "#/components/parameters/zoneId"
-        - in: path
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/page"
+        - in: query
           name: animalName
           required: true
           schema:
@@ -110,7 +90,7 @@ paths:
             description: Animal name which should be a single word
       responses:
         '200':
-          description: Successfully acquired the animal for given zone
+          description: Successfully acquired the animals for given zone and name
           content:
             application/json:
               schema:
@@ -133,9 +113,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ExistingZone"
+                $ref: "#/components/schemas/ExistingZone"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/where-live-least-animals:
@@ -150,9 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ExistingZone"
+                $ref: "#/components/schemas/ExistingZone"
         '500':
           $ref: "#/components/responses/ServerError"
 
@@ -179,6 +155,42 @@ components:
       schema:
         type: integer
         minimum: 0
+    size:
+      in: query
+      name: size
+      description: Size of the page (number of returned elements)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        example: 20
+    page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        example: 2
+    shouldSortByName:
+      in: query
+      name: shouldSortByName
+      description: If true sorts results by "name" field. Order is selected by sortDirection property
+      required: false
+      schema:
+        type: boolean
+        example: true
+    sortDirection:
+      in: query
+      name: sortDirection
+      description: Order of sorting
+      required: false
+      schema:
+        type: string
+        enum:
+          - ASC
+          - DESC
   schemas:
     ZoneCreationDto:
       type: object
@@ -197,7 +209,7 @@ components:
         name:
           type: string
           example: "Nancy"
-          description: Animal's name
+          description: Animal's name. Multiple animals may have that same name
         type:
           type: string
           description: Animal's type
@@ -214,6 +226,9 @@ components:
           type: integer
           minimum: 0
           description: Animal id
+        zone:
+          type: string
+          description: Animal's zone
     ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"
