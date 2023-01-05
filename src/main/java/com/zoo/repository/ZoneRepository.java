@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface ZoneRepository extends JpaRepository<Zone, Integer> {
     boolean existsByNameIgnoreCaseAllIgnoreCase(@NonNull String name);
     @Override
-    Optional<Zone> findById(Integer integer);
+    Optional<Zone> findById(Integer zoneId);
 }

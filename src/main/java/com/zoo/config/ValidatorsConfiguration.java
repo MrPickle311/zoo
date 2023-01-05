@@ -1,11 +1,10 @@
 package com.zoo.config;
 
-import com.zoo.service.validation.complex.AnimalsAcquiringValidator;
+import com.zoo.service.validation.complex.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.complex.ZoneIdValidator;
 import com.zoo.service.validation.complex.AnimalsTypeCreationValidator;
 import com.zoo.service.validation.complex.ZoneCreationValidator;
-import com.zoo.service.validation.simple.AnimalTypeNameSimpleValidator;
-import com.zoo.service.validation.simple.AnimalZoneExistenceSimpleValidator;
-import com.zoo.service.validation.simple.ZoneNameSimpleValidator;
+import com.zoo.service.validation.simple.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,8 +16,10 @@ import java.util.Set;
 public class ValidatorsConfiguration {
 
     private final ZoneNameSimpleValidator zoneNameValidator;
-    private final AnimalZoneExistenceSimpleValidator animalZoneExistenceSimpleValidator;
+    private final ZoneExistenceSimpleValidator zoneExistenceSimpleValidator;
     private final AnimalTypeNameSimpleValidator animalTypeNameSimpleValidator;
+    private final FoodCapacityValidator foodCapacityValidator;
+    private final AnimalTypeExistenceSimpleValidator animalTypeExistenceSimpleValidator;
 
     @Bean
     public ZoneCreationValidator zoneInsertionValidator() {
@@ -26,12 +27,17 @@ public class ValidatorsConfiguration {
     }
 
     @Bean
-    public AnimalsAcquiringValidator animalsAcquiringValidator() {
-        return new AnimalsAcquiringValidator(Set.of(animalZoneExistenceSimpleValidator));
+    public ZoneIdValidator animalsAcquiringValidator() {
+        return new ZoneIdValidator(Set.of(zoneExistenceSimpleValidator));
     }
 
     @Bean
     public AnimalsTypeCreationValidator animalsAssigmentValidator() {
         return new AnimalsTypeCreationValidator(Set.of(animalTypeNameSimpleValidator));
+    }
+
+    @Bean
+    public CompositeAnimalInsertionValidator animalCreationValidator() {
+        return new CompositeAnimalInsertionValidator(Set.of(foodCapacityValidator, animalTypeExistenceSimpleValidator));
     }
 }

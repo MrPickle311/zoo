@@ -8,6 +8,7 @@ import com.zoo.service.validation.complex.AnimalsTypeCreationValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +18,7 @@ public class AnimalTypeService {
     private final AnimalsTypeCreationValidator animalsTypeCreationValidator;
     private final ModelMapper modelMapper;
 
+    @Transactional
     public ExistingAnimalType addAAnimalType(AnimalTypeCreationDto animalTypeCreationDto) {
         animalsTypeCreationValidator.validate(animalTypeCreationDto);
         var newAnimalType = modelMapper.map(animalTypeCreationDto, AnimalType.class);

@@ -5,7 +5,7 @@ import com.zoo.service.validation.simple.SimpleValidator;
 
 import java.util.Set;
 
-public class ZoneCreationValidator extends ComplexValidator<ZoneCreationDto> {
+public class ZoneCreationValidator extends SimpleCompositeValidator<ZoneCreationDto> {
 
     public ZoneCreationValidator(Set<SimpleValidator<ZoneCreationDto>> simpleValidators) {
         super(simpleValidators);

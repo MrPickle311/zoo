@@ -4,8 +4,8 @@ import com.zoo.service.validation.simple.SimpleValidator;
 
 import java.util.Set;
 
-public class AnimalsAcquiringValidator extends ComplexValidator<Integer> {
-    public AnimalsAcquiringValidator(Set<SimpleValidator<Integer>> simpleValidators) {
+public class ZoneIdValidator extends SimpleCompositeValidator<Integer> {
+    public ZoneIdValidator(Set<SimpleValidator<Integer>> simpleValidators) {
         super(simpleValidators);
     }
 }

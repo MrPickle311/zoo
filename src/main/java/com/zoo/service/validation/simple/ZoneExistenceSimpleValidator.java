@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AnimalZoneExistenceSimpleValidator implements SimpleValidator<Integer> {
+public class ZoneExistenceSimpleValidator implements SimpleValidator<Integer> {
 
     private final AnimalRepository animalRepository;
 

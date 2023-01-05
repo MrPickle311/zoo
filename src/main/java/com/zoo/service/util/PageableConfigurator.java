@@ -1,4 +1,4 @@
-package com.zoo.service;
+package com.zoo.service.util;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
