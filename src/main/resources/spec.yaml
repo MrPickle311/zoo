@@ -153,12 +153,14 @@ components:
       required: true
       schema:
         type: integer
+        minimum: 0
   schemas:
     ZoneCreationDto:
       type: object
       properties:
         name:
           type: string
+          example: "FirstZone"
           nullable: false
           pattern: '^[A-Za-z]+$'
           description: Zone name which should be without whitespaces
@@ -169,6 +171,7 @@ components:
       properties:
         name:
           type: string
+          example: "Nancy"
           description: Animal's name
         type:
           type: string
@@ -184,6 +187,7 @@ components:
       properties:
         id:
           type: integer
+          minimum: 0
           description: Animal id
     ExistingZone:
       allOf:
@@ -193,6 +197,7 @@ components:
       properties:
         code:
           type: string
+          example: ALREADY_EXISTS
       required:
         - code
     ErrorCode:
