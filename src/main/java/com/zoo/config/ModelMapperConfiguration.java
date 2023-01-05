@@ -24,6 +24,7 @@ public class ModelMapperConfiguration {
                         .name(source.getName())
                         .id(source.getId())
                         .type(ExistingAnimal.TypeEnum.fromValue(source.getAnimalType().getName()))
+                        .zone(source.getZone().getName())
                         .build();
             }
         };

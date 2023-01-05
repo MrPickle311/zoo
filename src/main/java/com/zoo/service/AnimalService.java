@@ -23,7 +23,17 @@ public class AnimalService {
     public List<ExistingAnimal> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
         animalsAcquiringValidator.validate(zoneId);
         Pageable pageable = PageableConfigurator.preparePageable(size, page, Boolean.TRUE.equals(shouldSortByName) ? NAME : null, sortDirection);
-        List<Animal> animalList = animalRepository.findByAnimalType_Zone_Id(zoneId, pageable);
+        List<Animal> animalList = animalRepository.findByZone_Id(zoneId, pageable);
+        return convertAnimalsDtoToExistingAnimalsDto(animalList);
+    }
+
+    public List<ExistingAnimal> getAnimalsByName(String animalName, Integer size, Integer page) {
+        Pageable pageable = PageableConfigurator.preparePageable(size, page, null, null);
+        List<Animal> animalList = animalRepository.findByName(animalName, pageable);
+        return convertAnimalsDtoToExistingAnimalsDto(animalList);
+    }
+
+    private List<ExistingAnimal> convertAnimalsDtoToExistingAnimalsDto(List<Animal> animalList) {
         return animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
     }
 }

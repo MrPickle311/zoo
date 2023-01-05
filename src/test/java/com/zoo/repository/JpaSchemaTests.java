@@ -1,7 +1,6 @@
 package com.zoo.repository;
 
 import com.zoo.model.Animal;
-import com.zoo.model.AnimalType;
 import com.zoo.model.Zone;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class JpaSchemaTests {
 
     public static final String SAMPLE_ZONE = "FunnyZone";
+    public static final String SAMPLE_ANIMAL_NAME = "Harry";
     @Autowired
     private ZoneRepository zoneRepository;
     @Autowired
@@ -38,13 +38,6 @@ class JpaSchemaTests {
         void shouldFindZones() {
             List<Zone> zones = zoneRepository.findAll();
             assertEquals(3, zones.size());
-        }
-
-        @Test
-        void shouldContainAnimalTypes() {
-            Zone zones = zoneRepository.findById(1).get();
-            Set<AnimalType> animalTypes = zones.getAnimalTypes();
-            assertEquals(1, animalTypes.size());
         }
 
         @Test
@@ -78,9 +71,8 @@ class JpaSchemaTests {
 
         @Test
         void shouldGetAnimalsFromZone() {
-            Zone zones = zoneRepository.findById(1).get();
-            List<AnimalType> animalTypes = zones.getAnimalTypes().stream().toList();
-            Set<Animal> animals = animalTypes.get(0).getAnimals();
+            Zone zone = zoneRepository.findById(1).get();
+            Set<Animal> animals = zone.getAnimals();
             assertEquals(2, animals.size());
         }
 
@@ -95,24 +87,31 @@ class JpaSchemaTests {
                     .by("name")
                     .ascending();
             Pageable pageable = PageRequest.of(0, 2, sort);
-            var result = animalRepository.findByAnimalType_Zone_Id(1, pageable);
+            var result = animalRepository.findByZone_Id(1, pageable);
             assertEquals(2, result.size());
         }
 
         @Test
         void shouldGetAnimalsByZoneIdNotPaged() {
-            var result = animalRepository.findByAnimalType_Zone_Id(1, Pageable.unpaged());
+            var result = animalRepository.findByZone_Id(1, Pageable.unpaged());
             assertEquals(2, result.size());
         }
 
         @Test
-        void zoneShouldExists(){
-            assertTrue(animalRepository.existsByAnimalType_Zone_Id(1));
+        void zoneShouldExists() {
+            assertTrue(animalRepository.existsByZone_Id(1));
         }
 
         @Test
-        void zoneShouldNotExists(){
-            assertFalse(animalRepository.existsByAnimalType_Zone_Id(111));
+        void zoneShouldNotExists() {
+            assertFalse(animalRepository.existsByZone_Id(111));
+        }
+
+        @Test
+        void shouldFindAnimalsByName() {
+            Pageable pageable = PageRequest.of(0, 20);
+            var result = animalRepository.findByName( SAMPLE_ANIMAL_NAME, pageable);
+            assertEquals(1, result.size());
         }
     }
 }
