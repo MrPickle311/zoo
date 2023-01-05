@@ -4,7 +4,7 @@ import com.zoo.model.AnimalType;
 import com.zoo.openapi.model.AnimalTypeCreationDto;
 import com.zoo.openapi.model.ExistingAnimalType;
 import com.zoo.repository.AnimalTypeRepository;
-import com.zoo.service.validation.complex.AnimalsTypeCreationValidator;
+import com.zoo.service.validation.composite.AnimalsTypeCreationValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;

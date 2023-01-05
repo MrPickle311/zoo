@@ -1,4 +1,4 @@
-package com.zoo.service.validation.complex;
+package com.zoo.service.validation.composite;
 
 import com.zoo.openapi.model.AnimalAssigmentDto;
 import com.zoo.service.validation.simple.AnimalInsertionValidator;

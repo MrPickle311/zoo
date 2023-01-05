@@ -4,7 +4,7 @@ import com.zoo.config.ModelMapperConfiguration;
 import com.zoo.model.AnimalType;
 import com.zoo.openapi.model.AnimalTypeCreationDto;
 import com.zoo.repository.AnimalTypeRepository;
-import com.zoo.service.validation.complex.AnimalsTypeCreationValidator;
+import com.zoo.service.validation.composite.AnimalsTypeCreationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

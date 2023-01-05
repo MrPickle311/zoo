@@ -1,9 +1,9 @@
 package com.zoo.config;
 
-import com.zoo.service.validation.complex.CompositeAnimalInsertionValidator;
-import com.zoo.service.validation.complex.ZoneIdValidator;
-import com.zoo.service.validation.complex.AnimalsTypeCreationValidator;
-import com.zoo.service.validation.complex.ZoneCreationValidator;
+import com.zoo.service.validation.composite.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.composite.ZoneIdValidator;
+import com.zoo.service.validation.composite.AnimalsTypeCreationValidator;
+import com.zoo.service.validation.composite.ZoneCreationValidator;
 import com.zoo.service.validation.simple.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
