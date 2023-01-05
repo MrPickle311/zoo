@@ -4,9 +4,13 @@ import com.zoo.config.ModelMapperConfiguration;
 import com.zoo.model.Animal;
 import com.zoo.model.AnimalType;
 import com.zoo.model.Zone;
+import com.zoo.openapi.model.AnimalAssigmentDto;
 import com.zoo.openapi.model.ExistingAnimal;
 import com.zoo.repository.AnimalRepository;
-import com.zoo.service.validation.complex.AnimalsAcquiringValidator;
+import com.zoo.repository.AnimalTypeRepository;
+import com.zoo.repository.ZoneRepository;
+import com.zoo.service.validation.complex.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.complex.ZoneIdValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -36,7 +41,13 @@ class AnimalServiceTest {
     @Mock
     private AnimalRepository animalRepository;
     @Mock
-    private AnimalsAcquiringValidator animalsAcquiringValidator;
+    private AnimalTypeRepository animalTypeRepository;
+    @Mock
+    private ZoneRepository zoneRepository;
+    @Mock
+    private CompositeAnimalInsertionValidator compositeAnimalInsertionValidator;
+    @Mock
+    private ZoneIdValidator zoneIdValidator;
     @InjectMocks
     private AnimalService underTest;
 
@@ -102,6 +113,35 @@ class AnimalServiceTest {
             assertEquals(animal.getId(), existingAnimal.getId());
             assertEquals(animal.getName(), existingAnimal.getName());
             assertEquals(animal.getZone().getName(), existingAnimal.getZone());
+        }
+    }
+
+    @Nested
+    class WhenInsertingAnimals {
+
+        @Test
+        void shouldInsertAnimal() {
+            var zone = new Zone();
+            var animalType = new AnimalType();
+            var animal = new Animal();
+            animal.setAnimalType(animalType);
+            animal.setZone(zone);
+            animal.setName(SAMPLE_ANIMAL_NAME);
+            animal.setId(1);
+            when(zoneRepository.findById(anyInt()))
+                    .thenReturn(Optional.of(zone));
+            when(animalTypeRepository.findByNameIgnoreCaseAllIgnoreCase(anyString()))
+                    .thenReturn(Optional.of(animalType));
+            when(animalRepository.save(any()))
+                    .thenReturn(animal);
+            var animalAssigmentDto = AnimalAssigmentDto.builder()
+                    .name(SAMPLE_ANIMAL_NAME)
+                    .type(SAMPLE_ANIMAL_TYPE)
+                    .build();
+            var existingAnimal = underTest.addAnimal(1, animalAssigmentDto);
+
+            assertEquals(animal.getId(), existingAnimal.getId());
+            assertEquals(animal.getName(), existingAnimal.getName());
         }
     }
 }

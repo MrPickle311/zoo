@@ -126,7 +126,7 @@ paths:
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/which-requires-most-food:
+  /zones/requires-most-food:
     get:
       tags:
         - zoo
@@ -141,7 +141,7 @@ paths:
                 $ref: "#/components/schemas/ExistingZone"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/where-live-least-animals:
+  /zones/least-animals:
     get:
       tags:
         - zoo
