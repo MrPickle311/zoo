@@ -21,4 +21,8 @@ public class Animal {
     @ManyToOne
     @JoinColumn(name = "animal_type_id")
     private AnimalType animalType;
+
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 }
