@@ -296,3 +296,5 @@ components:
         - ALREADY_EXISTS
         - ZONE_NOT_FOUND
         - INVALID_INPUT_DATA
+        - NO_MORE_FOOD
+        - ANIMAL_TYPE_NOT_FOUND
