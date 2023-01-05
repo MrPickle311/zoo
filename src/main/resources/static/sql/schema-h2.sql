@@ -2,7 +2,8 @@ CREATE TABLE IF NOT EXISTS zones
 (
     id   integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name text    NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS animal_type
@@ -11,7 +12,8 @@ CREATE TABLE IF NOT EXISTS animal_type
     name                  text    NOT NULL,
     required_food_per_day integer NOT NULL,
     zone_id               int     NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE (name)
 );
 
 CREATE TABLE IF NOT EXISTS animal
