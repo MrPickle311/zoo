@@ -4,9 +4,9 @@ VALUES ('FirstZone'),
        ('ThirdZone');
 
 INSERT INTO animal_type (name, required_food_per_day)
-VALUES ('ELEPHANT', 20),
-       ('LION', 11),
-       ('BUNNY', 4);
+VALUES ('Elephant', 20),
+       ('Lion', 11),
+       ('Bunny', 4);
 
 INSERT INTO animal (animal_type_id, name, zone_id)
 VALUES (1, 'John', 1),
@@ -15,4 +15,3 @@ VALUES (1, 'John', 1),
        (2, 'Neo', 2),
        (3, 'Billy', 3),
        (3, 'Nancy', 3);
-

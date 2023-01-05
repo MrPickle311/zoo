@@ -1,6 +1,7 @@
 package com.zoo.repository;
 
 import com.zoo.model.Animal;
+import com.zoo.model.AnimalType;
 import com.zoo.model.Zone;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,8 @@ class JpaSchemaTests {
     private ZoneRepository zoneRepository;
     @Autowired
     private AnimalRepository animalRepository;
+    @Autowired
+    private AnimalTypeRepository animalTypeRepository;
 
     @Test
     void zoneRepositoryShouldBeNotNull() {
@@ -67,7 +70,7 @@ class JpaSchemaTests {
     }
 
     @Nested
-    class WhenManipulatingAnimalTypes {
+    class WhenManipulatingAnimals {
 
         @Test
         void shouldGetAnimalsFromZone() {
@@ -112,6 +115,19 @@ class JpaSchemaTests {
             Pageable pageable = PageRequest.of(0, 20);
             var result = animalRepository.findByName( SAMPLE_ANIMAL_NAME, pageable);
             assertEquals(1, result.size());
+        }
+    }
+
+    @Nested
+    class WhenManipulatingAnimalTypes{
+
+        @Test
+        void shouldAddAnimalType(){
+            AnimalType animalType = new AnimalType();
+            animalType.setRequiredFoodPerDay(50);
+            animalType.setName("Pig");
+            var result = animalTypeRepository.save(animalType);
+            assertEquals(animalType.getName(), result.getName());
         }
     }
 }

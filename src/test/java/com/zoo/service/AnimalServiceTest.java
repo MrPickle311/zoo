@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 class AnimalServiceTest {
 
     public static final String SAMPLE_ZONE = "SampleZone";
-    public static final String SAMPLE_ANIMAL_TYPE = ExistingAnimal.TypeEnum.ELEPHANT.toString();
+    public static final String SAMPLE_ANIMAL_TYPE = "Elephant";
     public static final String SAMPLE_ANIMAL_NAME = "SampleAnimalName";
     public static final String ANIMAL_NAME = "Harry";
 
@@ -70,7 +70,7 @@ class AnimalServiceTest {
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
 
-            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType().toString());
+            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType());
             assertEquals(animal.getId(), existingAnimal.getId());
             assertEquals(animal.getName(), existingAnimal.getName());
             assertEquals(animal.getZone().getName(), existingAnimal.getZone());
@@ -98,7 +98,7 @@ class AnimalServiceTest {
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
 
-            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType().toString());
+            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType());
             assertEquals(animal.getId(), existingAnimal.getId());
             assertEquals(animal.getName(), existingAnimal.getName());
             assertEquals(animal.getZone().getName(), existingAnimal.getZone());

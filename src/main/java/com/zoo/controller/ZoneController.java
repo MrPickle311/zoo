@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-public class ZooController implements ZonesApi {
+public class ZoneController implements ZonesApi {
 
     private final ZoneService zoneService;
 

@@ -23,7 +23,7 @@ public class ModelMapperConfiguration {
                 return ExistingAnimal.builder()
                         .name(source.getName())
                         .id(source.getId())
-                        .type(ExistingAnimal.TypeEnum.fromValue(source.getAnimalType().getName()))
+                        .type(source.getAnimalType().getName())
                         .zone(source.getZone().getName())
                         .build();
             }

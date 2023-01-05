@@ -45,6 +45,10 @@ paths:
               $ref: "#/components/schemas/AnimalAssigmentDto"
       responses:
         '201':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimal"
           description: Created animal and assigned it to the zone
         '400':
           $ref: "#/components/responses/ClientError"
@@ -97,6 +101,27 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ExistingAnimal"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /animals/types:
+    post:
+      tags:
+        - zoo
+      operationId: addAnimalType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalTypeCreationDto"
+      responses:
+        '201':
+          description: Successfully created animal type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimalType"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
@@ -203,20 +228,36 @@ components:
           description: Zone name which should be without whitespaces
       required:
         - name
+    AnimalTypeCreationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: '^[A-Za-z]+$'
+          nullable: false
+          description: Animal's type which should be a single word
+        requiredFoodPerDay:
+          type: integer
+          nullable: false
+          minimum: 1
+          description: Amount of food which is required by animal per day
     AnimalAssigmentDto:
       type: object
       properties:
         name:
           type: string
+          nullable: false
           example: "Nancy"
           description: Animal's name. Multiple animals may have that same name
         type:
           type: string
-          description: Animal's type
-          enum:
-            - ELEPHANT
-            - LION
-            - BUNNY
+          nullable: false
+          example: "Lion"
+          description: Animal's type which should be a single word
+          pattern: '^[A-Za-z]+$'
+      required:
+        - name
+        - type
     ExistingAnimal:
       type: object
       allOf:
@@ -229,6 +270,15 @@ components:
         zone:
           type: string
           description: Animal's zone
+    ExistingAnimalType:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AnimalTypeCreationDto"
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          description: Animal type id
     ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"

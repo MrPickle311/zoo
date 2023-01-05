@@ -1,6 +1,7 @@
 package com.zoo.service;
 
 import com.zoo.model.Animal;
+import com.zoo.openapi.model.AnimalAssigmentDto;
 import com.zoo.openapi.model.ExistingAnimal;
 import com.zoo.repository.AnimalRepository;
 import com.zoo.service.validation.complex.AnimalsAcquiringValidator;
@@ -35,5 +36,9 @@ public class AnimalService {
 
     private List<ExistingAnimal> convertAnimalsDtoToExistingAnimalsDto(List<Animal> animalList) {
         return animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
+    }
+
+    public ExistingAnimal addAnimal(Integer zoneId, AnimalAssigmentDto animalAssigmentDto) {
+        return null;
     }
 }
