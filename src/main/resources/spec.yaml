@@ -88,10 +88,10 @@ paths:
         - in: query
           name: animalName
           required: true
+          description: Animal name which should be a single word
           schema:
             type: string
             pattern: '^[A-Za-z]+$'
-            description: Animal name which should be a single word
       responses:
         '200':
           description: Successfully acquired the animals for given zone and name
@@ -101,6 +101,27 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/ExistingAnimal"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /animals/types:
+    post:
+      tags:
+        - zoo
+      operationId: addAnimalType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalTypeCreationDto"
+      responses:
+        '201':
+          description: Successfully created animal type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimalType"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
@@ -139,6 +160,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExistingZoneFoodReport"
+        '404':
+          description: "Zoo does not contain any zone. Cannot download the report"
+          $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/least-animals:
@@ -154,6 +178,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ExistingZoneAnimalsReport"
+        '404':
+          description: "Zoo does not contain any zone. Cannot download the report"
+          $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
 
@@ -235,6 +262,7 @@ components:
           type: string
           pattern: '^[A-Za-z]+$'
           nullable: false
+          example: "Elephant"
           description: Animal's type which should be a single word
         requiredFoodPerDay:
           type: integer
@@ -269,6 +297,7 @@ components:
           description: Animal id
         zone:
           type: string
+          example: "FirstZone"
           description: Animal's zone
     ExistingAnimalType:
       type: object

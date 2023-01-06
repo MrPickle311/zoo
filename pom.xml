@@ -10,7 +10,8 @@
     </parent>
     <groupId>com</groupId>
     <artifactId>zoo</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
     <name>zoo</name>
     <description>zoo</description>
     <properties>
@@ -102,6 +103,7 @@
     </dependencies>
 
     <build>
+        <finalName>zoo</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
