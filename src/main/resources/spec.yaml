@@ -22,12 +22,16 @@ paths:
               $ref: "#/components/schemas/ZoneCreationDto"
       responses:
         '201':
-          description: Zone has been created
+          description: Zone has been created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingZone"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/{zoneId}:
+  /animals/{zoneId}:
     post:
       tags:
         - zoo
@@ -41,6 +45,10 @@ paths:
               $ref: "#/components/schemas/AnimalAssigmentDto"
       responses:
         '201':
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimal"
           description: Created animal and assigned it to the zone
         '400':
           $ref: "#/components/responses/ClientError"
@@ -52,6 +60,10 @@ paths:
       operationId: getAnimals
       parameters:
         - $ref: "#/components/parameters/zoneId"
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/shouldSortByName"
+        - $ref: "#/components/parameters/sortDirection"
       responses:
         '200':
           description: Successfully acquired all animals for given zone
@@ -60,19 +72,20 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Animal"
+                  $ref: "#/components/schemas/ExistingAnimal"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/{zoneId}/{animalName}:
+  /animals:
     get:
       tags:
         - zoo
-      operationId: getAnimal
+      operationId: getAnimalsByName
       parameters:
-        - $ref: "#/components/parameters/zoneId"
-        - in: path
+        - $ref: "#/components/parameters/size"
+        - $ref: "#/components/parameters/page"
+        - in: query
           name: animalName
           required: true
           schema:
@@ -81,18 +94,39 @@ paths:
             description: Animal name which should be a single word
       responses:
         '200':
-          description: Successfully acquired the animal for given zone
+          description: Successfully acquired the animals for given zone and name
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Animal"
+                  $ref: "#/components/schemas/ExistingAnimal"
         '400':
           $ref: "#/components/responses/ClientError"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/which-requires-most-food:
+  /animals/types:
+    post:
+      tags:
+        - zoo
+      operationId: addAnimalType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalTypeCreationDto"
+      responses:
+        '201':
+          description: Successfully created animal type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimalType"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
+  /zones/requires-most-food:
     get:
       tags:
         - zoo
@@ -104,12 +138,10 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Zone"
+                $ref: "#/components/schemas/ExistingZoneFoodReport"
         '500':
           $ref: "#/components/responses/ServerError"
-  /zones/where-live-least-animals:
+  /zones/least-animals:
     get:
       tags:
         - zoo
@@ -121,9 +153,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Zone"
+                $ref: "#/components/schemas/ExistingZoneAnimalsReport"
         '500':
           $ref: "#/components/responses/ServerError"
 
@@ -144,45 +174,168 @@ components:
   parameters:
     zoneId:
       in: path
-      name: id
+      name: zoneId
       description: Zone id
       required: true
       schema:
         type: integer
+        minimum: 0
+    size:
+      in: query
+      name: size
+      description: Size of the page (number of returned elements)
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        example: 20
+    page:
+      in: query
+      name: page
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        example: 2
+    shouldSortByName:
+      in: query
+      name: shouldSortByName
+      description: If true sorts results by "name" field. Order is selected by sortDirection property
+      required: false
+      schema:
+        type: boolean
+        example: true
+    sortDirection:
+      in: query
+      name: sortDirection
+      description: Order of sorting
+      required: false
+      schema:
+        type: string
+        enum:
+          - ASC
+          - DESC
   schemas:
     ZoneCreationDto:
       type: object
       properties:
         name:
           type: string
+          example: "FirstZone"
+          nullable: false
+          pattern: '^[A-Za-z]+$'
+          description: Zone name which should be without whitespaces
+      required:
+        - name
+    AnimalTypeCreationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: '^[A-Za-z]+$'
+          nullable: false
+          description: Animal's type which should be a single word
+        requiredFoodPerDay:
+          type: integer
+          nullable: false
+          minimum: 1
+          description: Amount of food which is required by animal per day
     AnimalAssigmentDto:
       type: object
       properties:
         name:
           type: string
-          description: Animal's name
+          nullable: false
+          example: "Nancy"
+          description: Animal's name. Multiple animals may have that same name
         type:
           type: string
-          description: Animal's type
-          enum:
-            - ELEPHANT
-            - LION
-            - BUNNY
-    Animal:
+          nullable: false
+          example: "Lion"
+          description: Animal's type which should be a single word
+          pattern: '^[A-Za-z]+$'
+      required:
+        - name
+        - type
+    ExistingAnimal:
       type: object
       allOf:
         - $ref: "#/components/schemas/AnimalAssigmentDto"
       properties:
-            id:
-              type: integer
-              description: Animal id
-    Zone:
+        id:
+          type: integer
+          minimum: 0
+          description: Animal id
+        zone:
+          type: string
+          description: Animal's zone
+    ExistingAnimalType:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/AnimalTypeCreationDto"
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          description: Animal type id
+    ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - id
+    ExistingZoneFoodReport:
+      allOf:
+        - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        currentAmountOfRequiredFood:
+          type: integer
+          minimum: 0
+          description: Minimum current amount of food required by animals in zone.
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - currentAmountOfRequiredFood
+    ExistingZoneAnimalsReport:
+      allOf:
+        - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        animalsCount:
+          type: integer
+          minimum: 0
+          description: Count of animals in zone.
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - animalsCount
     Error:
       type: object
       properties:
         code:
           type: string
-          enum:
-            - NOT_FOUND
+          example: ALREADY_EXISTS
+        description:
+          type: string
+          default: ""
+          example: "addAnimal.zoneId: must be greater than or equal to 0"
+      required:
+        - code
+    ErrorCode:
+      type: string
+      enum:
+        - UNKNOWN_ERROR
+        - ALREADY_EXISTS
+        - ZONE_NOT_FOUND
+        - INVALID_INPUT_DATA
+        - NO_MORE_FOOD
+        - ANIMAL_TYPE_NOT_FOUND
+        - NO_ZONES_PRESENT_IN_ZOO
