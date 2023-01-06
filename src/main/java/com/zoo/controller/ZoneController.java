@@ -2,6 +2,8 @@ package com.zoo.controller;
 
 import com.zoo.openapi.api.ZonesApi;
 import com.zoo.openapi.model.ExistingZone;
+import com.zoo.openapi.model.ExistingZoneAnimalsReport;
+import com.zoo.openapi.model.ExistingZoneFoodReport;
 import com.zoo.openapi.model.ZoneCreationDto;
 import com.zoo.service.ZoneService;
 import lombok.RequiredArgsConstructor;
@@ -26,14 +28,14 @@ public class ZoneController implements ZonesApi {
     }
 
     @Override
-    public ResponseEntity<ExistingZone> getZoneWhichRequiresMostFood() {
+    public ResponseEntity<ExistingZoneFoodReport> getZoneWhichRequiresMostFood() {
         log.info("Acquiring zone which requires most food");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(zoneService.getZoneWhichRequiresMostFood());
     }
 
     @Override
-    public ResponseEntity<ExistingZone> zoneWhereLiveLeastAnimals() {
+    public ResponseEntity<ExistingZoneAnimalsReport> zoneWhereLiveLeastAnimals() {
         log.info("Acquiring zone where live least animals");
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        return ResponseEntity.status(HttpStatus.OK).body(zoneService.getZoneWhereLiveLeastAnimals());
     }
 }
