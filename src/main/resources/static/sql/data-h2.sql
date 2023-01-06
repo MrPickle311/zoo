@@ -13,5 +13,7 @@ VALUES (1, 'John', 1),
        (1, 'Harry', 1),
        (2, 'Ronald', 2),
        (2, 'Neo', 2),
-       (3, 'Billy', 3),
+       (2, 'Jimmy', 2),
+       (3, 'Billy', 2),
+       (3, 'Nancy', 2),
        (3, 'Nancy', 3);

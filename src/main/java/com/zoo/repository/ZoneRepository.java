@@ -9,7 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface ZoneRepository extends JpaRepository<Zone, Integer> {
+
     boolean existsByNameIgnoreCaseAllIgnoreCase(@NonNull String name);
+
     @Override
     Optional<Zone> findById(Integer zoneId);
 }
