@@ -23,4 +23,12 @@ public class Zone {
 
     @OneToMany(mappedBy = "zone")
     private Set<Animal> animals;
+
+    public int getCurrentAmountOfRequiredFood() {
+        return getAnimals().stream().mapToInt(a -> a.getAnimalType().getRequiredFoodPerDay()).sum();
+    }
+
+    public int getAnimalsCount() {
+        return getAnimals().size();
+    }
 }

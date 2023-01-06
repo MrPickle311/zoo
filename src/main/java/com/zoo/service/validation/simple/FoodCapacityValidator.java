@@ -41,6 +41,6 @@ public class FoodCapacityValidator implements AnimalInsertionValidator {
     private int sumCurrentFoodRequirementsInZone(int zoneId) {
         Zone zone = zoneRepository.findById(zoneId)
                 .orElseThrow(() -> new DataValidationException(ErrorCode.ZONE_NOT_FOUND));
-        return zone.getAnimals().stream().mapToInt(a -> a.getAnimalType().getRequiredFoodPerDay()).sum();
+        return zone.getCurrentAmountOfRequiredFood();
     }
 }
