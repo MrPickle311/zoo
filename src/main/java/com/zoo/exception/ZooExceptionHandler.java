@@ -48,10 +48,20 @@ public class ZooExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public Error handleMethodArgumentNotValidException(ConstraintViolationException e) {
-        log.warn("Zone has not enough food: {}", e.getMessage());
+        log.warn("Passed not valid data: {}", e.getMessage());
         return Error.builder()
                 .code(ErrorCode.INVALID_INPUT_DATA.toString())
                 .description(e.getConstraintViolations().toString())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoZonesPresentInZooException.class)
+    public Error handleNoZonesPresentInZooException(NoZonesPresentInZooException e) {
+        log.warn("Zoo does not contain any zone: {}", e.getMessage());
+        return Error.builder()
+                .code(e.getErrorCode().toString())
+                .description("Zoo has not any zone")
                 .build();
     }
 }
