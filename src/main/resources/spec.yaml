@@ -138,7 +138,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExistingZone"
+                $ref: "#/components/schemas/ExistingZoneFoodReport"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/least-animals:
@@ -153,7 +153,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExistingZone"
+                $ref: "#/components/schemas/ExistingZoneAnimalsReport"
         '500':
           $ref: "#/components/responses/ServerError"
 
@@ -282,6 +282,41 @@ components:
     ExistingZone:
       allOf:
         - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - id
+    ExistingZoneFoodReport:
+      allOf:
+        - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        currentAmountOfRequiredFood:
+          type: integer
+          minimum: 0
+          description: Minimum current amount of food required by animals in zone.
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - currentAmountOfRequiredFood
+    ExistingZoneAnimalsReport:
+      allOf:
+        - $ref: "#/components/schemas/ZoneCreationDto"
+      properties:
+        animalsCount:
+          type: integer
+          minimum: 0
+          description: Count of animals in zone.
+        id:
+          type: integer
+          minimum: 0
+          description: Zone id
+      required:
+        - animalsCount
     Error:
       type: object
       properties:
@@ -297,8 +332,10 @@ components:
     ErrorCode:
       type: string
       enum:
+        - UNKNOWN_ERROR
         - ALREADY_EXISTS
         - ZONE_NOT_FOUND
         - INVALID_INPUT_DATA
         - NO_MORE_FOOD
         - ANIMAL_TYPE_NOT_FOUND
+        - NO_ZONES_PRESENT_IN_ZOO
