@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Set;
 
 @RequiredArgsConstructor
-public class CompositeAnimalInsertionValidator implements AnimalInsertionValidator {
+public class AnimalInsertionCompositeValidator implements AnimalInsertionValidator {
 
     private final Set<AnimalInsertionValidator> animalInsertionValidators;
 
