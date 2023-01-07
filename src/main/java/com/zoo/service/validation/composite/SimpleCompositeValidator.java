@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.Set;
 
 @RequiredArgsConstructor
-public abstract class SimpleCompositeValidator<T> {
+public class SimpleCompositeValidator<T> {
     private final Set<SimpleValidator<T>> simpleValidators;
 
     public void validate(T untilValidation) {

@@ -21,8 +21,16 @@ public class ZoneService {
     @Transactional
     public ExistingZone addZone(ZoneCreationDto zoneCreationDto) {
         zoneCreationValidator.validate(zoneCreationDto);
-        var newZone = modelMapper.map(zoneCreationDto, Zone.class);
+        var newZone = convertDtoToModel(zoneCreationDto);
+        return save(newZone);
+    }
+
+    private ExistingZone save(Zone newZone) {
         return modelMapper.map(zoneRepository.save(newZone), ExistingZone.class);
+    }
+
+    private Zone convertDtoToModel(ZoneCreationDto zoneCreationDto) {
+        return modelMapper.map(zoneCreationDto, Zone.class);
     }
 
     public ExistingZoneFoodReport getZoneWhichRequiresMostFood() {

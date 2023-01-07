@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class ZoneNameSimpleValidator implements SimpleValidator<ZoneCreationDto> {
+public class ZoneNameExistenceSimpleValidator implements SimpleValidator<ZoneCreationDto> {
 
     private final ZoneRepository zoneRepository;
 
