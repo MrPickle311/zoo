@@ -2,7 +2,7 @@
 
 Short description
 
-This is the minimalistic Zoo project. It's very simple CRUD application where you can add zones, animal types and animals.
+This is the minimalistic Zoo project. It's very simple CRUD application where you can add zones, animal types and animals. It uses Spring Boot, Hibernate and H2 in-memory database.
 
 ERD Diagram
 
