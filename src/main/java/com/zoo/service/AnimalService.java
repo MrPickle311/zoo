@@ -56,7 +56,7 @@ public class AnimalService {
         var animal = convertDtoToModel(animalAssigmentDto);
         animal.setZone(findZoneById(zoneId));
         animal.setAnimalType(findAnimalTypeByName(animalAssigmentDto.getType()));
-        return saveToRepository(animal);
+        return save(animal);
     }
 
     private List<ExistingAnimal> convertModelToDto(List<Animal> animalList) {
@@ -67,7 +67,7 @@ public class AnimalService {
         return modelMapper.map(animalAssigmentDto, Animal.class);
     }
 
-    private ExistingAnimal saveToRepository(Animal animal) {
+    private ExistingAnimal save(Animal animal) {
         return modelMapper.map(animalRepository.save(animal), ExistingAnimal.class);
     }
 
