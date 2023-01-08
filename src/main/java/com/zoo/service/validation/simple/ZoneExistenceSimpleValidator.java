@@ -14,7 +14,7 @@ public class ZoneExistenceSimpleValidator implements SimpleValidator<Integer> {
 
     @Override
     public void validate(Integer zoneId) {
-        if (!animalRepository.existsByZone_Id(zoneId)) {
+        if (!animalRepository.existsByZoneId(zoneId)) {
             throw new DataValidationException(ErrorCode.ZONE_NOT_FOUND);
         }
     }

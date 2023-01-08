@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +46,7 @@ class JpaSchemaTests {
 
         @Test
         void shouldAddNewZoneWithoutAnimalType() {
-            Zone zone = new Zone();
+            var zone = new Zone();
             zone.setName(SAMPLE_ZONE);
             zoneRepository.saveAndFlush(zone);
             List<Zone> zones = zoneRepository.findAll();
@@ -54,9 +55,9 @@ class JpaSchemaTests {
 
         @Test
         void shouldThrowExceptionWhenInsertExistingZone() {
-            Zone zone = new Zone();
+            var zone = new Zone();
             zone.setName(SAMPLE_ZONE);
-            Zone zone2 = new Zone();
+            var zone2 = new Zone();
             zone2.setName(SAMPLE_ZONE);
             zoneRepository.saveAndFlush(zone);
             assertThrows(DataIntegrityViolationException.class, () -> zoneRepository.saveAndFlush(zone2));
@@ -64,8 +65,8 @@ class JpaSchemaTests {
 
         @Test
         void shouldThrowExceptionWhenNameIsNull() {
-            Zone zone = new Zone();
-            assertThrows(DataIntegrityViolationException.class, () -> zoneRepository.saveAndFlush(zone));
+            var zone = new Zone();
+            assertThrows(ConstraintViolationException.class, () -> zoneRepository.saveAndFlush(zone));
         }
     }
 
@@ -90,24 +91,24 @@ class JpaSchemaTests {
                     .by("name")
                     .ascending();
             Pageable pageable = PageRequest.of(0, 2, sort);
-            var result = animalRepository.findByZone_Id(1, pageable);
+            var result = animalRepository.findByZoneId(1, pageable);
             assertEquals(2, result.size());
         }
 
         @Test
         void shouldGetAnimalsByZoneIdNotPaged() {
-            var result = animalRepository.findByZone_Id(1, Pageable.unpaged());
+            var result = animalRepository.findByZoneId(1, Pageable.unpaged());
             assertEquals(2, result.size());
         }
 
         @Test
         void zoneShouldExists() {
-            assertTrue(animalRepository.existsByZone_Id(1));
+            assertTrue(animalRepository.existsByZoneId(1));
         }
 
         @Test
         void zoneShouldNotExists() {
-            assertFalse(animalRepository.existsByZone_Id(111));
+            assertFalse(animalRepository.existsByZoneId(111));
         }
 
         @Test
@@ -123,7 +124,7 @@ class JpaSchemaTests {
 
         @Test
         void shouldAddAnimalType(){
-            AnimalType animalType = new AnimalType();
+            var animalType = new AnimalType();
             animalType.setRequiredFoodPerDay(50);
             animalType.setName("Pig");
             var result = animalTypeRepository.save(animalType);

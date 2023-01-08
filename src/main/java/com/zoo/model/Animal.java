@@ -16,13 +16,16 @@ public class Animal {
     @NotNull
     private int id;
 
-    String name;
+    @NotNull
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "animal_type_id")
+    @NotNull
     private AnimalType animalType;
 
     @ManyToOne
     @JoinColumn(name = "zone_id")
+    @NotNull
     private Zone zone;
 }

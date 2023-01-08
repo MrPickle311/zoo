@@ -14,9 +14,9 @@ import java.util.Set;
 public class AnimalType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private int id;
 
+    @NotNull
     private String name;
 
     @Column(name = "required_food_per_day")
