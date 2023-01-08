@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class AnimalTypeNameSimpleValidator implements SimpleValidator<AnimalTypeCreationDto> {
+public class AnimalTypeNameExistenceSimpleValidator implements SimpleValidator<AnimalTypeCreationDto> {
 
     private final AnimalTypeRepository animalTypeRepository;
 

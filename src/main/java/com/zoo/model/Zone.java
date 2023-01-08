@@ -19,6 +19,7 @@ public class Zone {
     private int id;
 
     @Column(name = "name", unique = true)
+    @NotNull
     private String name;
 
     @OneToMany(mappedBy = "zone")

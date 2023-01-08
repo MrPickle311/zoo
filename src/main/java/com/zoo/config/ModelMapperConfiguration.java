@@ -2,6 +2,7 @@ package com.zoo.config;
 
 import com.zoo.model.Animal;
 import com.zoo.openapi.model.ExistingAnimal;
+import lombok.NoArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Objects;
 
 @Configuration
+@NoArgsConstructor
 public class ModelMapperConfiguration {
 
     private static Converter<Animal, ExistingAnimal> animalExistingAnimalConverter() {

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Objects;
 
-public class PageableConfigurator {
+public final class PageableConfigurator {
 
     private PageableConfigurator() {
         throw new IllegalStateException("Utility class");

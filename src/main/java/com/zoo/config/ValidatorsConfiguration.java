@@ -1,6 +1,6 @@
 package com.zoo.config;
 
-import com.zoo.service.validation.composite.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.composite.AnimalInsertionCompositeValidator;
 import com.zoo.service.validation.composite.ZoneIdValidator;
 import com.zoo.service.validation.composite.AnimalsTypeCreationValidator;
 import com.zoo.service.validation.composite.ZoneCreationValidator;
@@ -15,11 +15,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ValidatorsConfiguration {
 
-    private final ZoneNameSimpleValidator zoneNameValidator;
+    private final ZoneNameExistenceSimpleValidator zoneNameValidator;
     private final ZoneExistenceSimpleValidator zoneExistenceSimpleValidator;
-    private final AnimalTypeNameSimpleValidator animalTypeNameSimpleValidator;
+    private final AnimalTypeNameExistenceSimpleValidator animalTypeNameExistenceSimpleValidator;
     private final FoodCapacityValidator foodCapacityValidator;
-    private final AnimalTypeExistenceSimpleValidator animalTypeExistenceSimpleValidator;
 
     @Bean
     public ZoneCreationValidator zoneInsertionValidator() {
@@ -33,11 +32,11 @@ public class ValidatorsConfiguration {
 
     @Bean
     public AnimalsTypeCreationValidator animalsAssigmentValidator() {
-        return new AnimalsTypeCreationValidator(Set.of(animalTypeNameSimpleValidator));
+        return new AnimalsTypeCreationValidator(Set.of(animalTypeNameExistenceSimpleValidator));
     }
 
     @Bean
-    public CompositeAnimalInsertionValidator animalCreationValidator() {
-        return new CompositeAnimalInsertionValidator(Set.of(foodCapacityValidator, animalTypeExistenceSimpleValidator));
+    public AnimalInsertionCompositeValidator animalCreationValidator() {
+        return new AnimalInsertionCompositeValidator(Set.of(foodCapacityValidator));
     }
 }

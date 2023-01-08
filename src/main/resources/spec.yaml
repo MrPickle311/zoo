@@ -346,18 +346,6 @@ components:
           description: Zone id
       required:
         - animalsCount
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-          example: ALREADY_EXISTS
-        description:
-          type: string
-          default: ""
-          example: "addAnimal.zoneId: must be greater than or equal to 0"
-      required:
-        - code
     ErrorCode:
       type: string
       enum:
@@ -368,3 +356,14 @@ components:
         - NO_MORE_FOOD
         - ANIMAL_TYPE_NOT_FOUND
         - NO_ZONES_PRESENT_IN_ZOO
+    Error:
+      type: object
+      properties:
+        code:
+          $ref: "#/components/schemas/ErrorCode"
+        description:
+          type: string
+          default: ""
+          example: "addAnimal.zoneId: must be greater than or equal to 0"
+      required:
+        - code

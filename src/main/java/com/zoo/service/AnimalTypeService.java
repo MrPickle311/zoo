@@ -21,7 +21,15 @@ public class AnimalTypeService {
     @Transactional
     public ExistingAnimalType addAAnimalType(AnimalTypeCreationDto animalTypeCreationDto) {
         animalsTypeCreationValidator.validate(animalTypeCreationDto);
-        var newAnimalType = modelMapper.map(animalTypeCreationDto, AnimalType.class);
+        var newAnimalType = convertDtoToDataModel(animalTypeCreationDto);
+        return save(newAnimalType);
+    }
+
+    private AnimalType convertDtoToDataModel(AnimalTypeCreationDto animalTypeCreationDto) {
+        return modelMapper.map(animalTypeCreationDto, AnimalType.class);
+    }
+
+    private ExistingAnimalType save(AnimalType newAnimalType) {
         return modelMapper.map(animalTypeRepository.save(newAnimalType), ExistingAnimalType.class);
     }
 }

@@ -8,9 +8,8 @@ import java.io.Serial;
 
 @RequiredArgsConstructor
 @Getter
-public class PrzekroczonyLimitJedzeniaException extends RuntimeException{
-
+public class DataIntegrityException extends RuntimeException {
     @Serial
-    private static final long serialVersionUID = 889911L;
+    private static final long serialVersionUID = 1234563L;
     private final ErrorCode errorCode;
 }

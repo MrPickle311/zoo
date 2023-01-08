@@ -1,13 +1,17 @@
 package com.zoo.service;
 
+import com.zoo.exception.DataIntegrityException;
 import com.zoo.model.Animal;
+import com.zoo.model.AnimalType;
+import com.zoo.model.Zone;
 import com.zoo.openapi.model.AnimalAssigmentDto;
+import com.zoo.openapi.model.ErrorCode;
 import com.zoo.openapi.model.ExistingAnimal;
 import com.zoo.repository.AnimalRepository;
 import com.zoo.repository.AnimalTypeRepository;
 import com.zoo.repository.ZoneRepository;
 import com.zoo.service.util.PageableConfigurator;
-import com.zoo.service.validation.composite.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.composite.AnimalInsertionCompositeValidator;
 import com.zoo.service.validation.composite.ZoneIdValidator;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,32 +31,53 @@ public class AnimalService {
     private final AnimalTypeRepository animalTypeRepository;
     private final ModelMapper modelMapper;
     private final ZoneIdValidator zoneIdValidator;
-    private final CompositeAnimalInsertionValidator compositeAnimalInsertionValidator;
+    private final AnimalInsertionCompositeValidator animalInsertionCompositeValidator;
 
     public List<ExistingAnimal> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
         zoneIdValidator.validate(zoneId);
+        List<Animal> animalList = findAnimalsByZoneId(zoneId, size, page, shouldSortByName, sortDirection);
+        return convertModelToDto(animalList);
+    }
+
+    private List<Animal> findAnimalsByZoneId(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
         Pageable pageable = PageableConfigurator.preparePageable(size, page, Boolean.TRUE.equals(shouldSortByName) ? NAME : null, sortDirection);
-        List<Animal> animalList = animalRepository.findByZone_Id(zoneId, pageable);
-        return convertAnimalsDtoToExistingAnimalsDto(animalList);
+        return animalRepository.findByZoneId(zoneId, pageable);
     }
 
     public List<ExistingAnimal> getAnimalsByName(String animalName, Integer size, Integer page) {
         Pageable pageable = PageableConfigurator.preparePageable(size, page, null, null);
         List<Animal> animalList = animalRepository.findByName(animalName, pageable);
-        return convertAnimalsDtoToExistingAnimalsDto(animalList);
-    }
-
-    private List<ExistingAnimal> convertAnimalsDtoToExistingAnimalsDto(List<Animal> animalList) {
-        return animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
+        return convertModelToDto(animalList);
     }
 
     @Transactional
     public ExistingAnimal addAnimal(Integer zoneId, AnimalAssigmentDto animalAssigmentDto) {
-        zoneIdValidator.validate(zoneId);
-        compositeAnimalInsertionValidator.validate(zoneId, animalAssigmentDto);
-        var animal = modelMapper.map(animalAssigmentDto, Animal.class);
-        animal.setZone(zoneRepository.findById(zoneId).get());
-        animal.setAnimalType(animalTypeRepository.findByNameIgnoreCaseAllIgnoreCase(animalAssigmentDto.getType()).get());
+        animalInsertionCompositeValidator.validate(zoneId, animalAssigmentDto);
+        var animal = convertDtoToModel(animalAssigmentDto);
+        animal.setZone(findZoneById(zoneId));
+        animal.setAnimalType(findAnimalTypeByName(animalAssigmentDto.getType()));
+        return save(animal);
+    }
+
+    private List<ExistingAnimal> convertModelToDto(List<Animal> animalList) {
+        return animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
+    }
+
+    private Animal convertDtoToModel(AnimalAssigmentDto animalAssigmentDto) {
+        return modelMapper.map(animalAssigmentDto, Animal.class);
+    }
+
+    private ExistingAnimal save(Animal animal) {
         return modelMapper.map(animalRepository.save(animal), ExistingAnimal.class);
+    }
+
+    private AnimalType findAnimalTypeByName(String animalTypeName) {
+        return animalTypeRepository.findByNameIgnoreCaseAllIgnoreCase(animalTypeName)
+                .orElseThrow(() -> new DataIntegrityException(ErrorCode.ANIMAL_TYPE_NOT_FOUND));
+    }
+
+    private Zone findZoneById(Integer zoneId) {
+        return zoneRepository.findById(zoneId)
+                .orElseThrow(() -> new DataIntegrityException(ErrorCode.ZONE_NOT_FOUND));
     }
 }

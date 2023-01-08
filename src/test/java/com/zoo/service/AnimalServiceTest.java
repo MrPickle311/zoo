@@ -9,7 +9,7 @@ import com.zoo.openapi.model.ExistingAnimal;
 import com.zoo.repository.AnimalRepository;
 import com.zoo.repository.AnimalTypeRepository;
 import com.zoo.repository.ZoneRepository;
-import com.zoo.service.validation.composite.CompositeAnimalInsertionValidator;
+import com.zoo.service.validation.composite.AnimalInsertionCompositeValidator;
 import com.zoo.service.validation.composite.ZoneIdValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -45,7 +45,7 @@ class AnimalServiceTest {
     @Mock
     private ZoneRepository zoneRepository;
     @Mock
-    private CompositeAnimalInsertionValidator compositeAnimalInsertionValidator;
+    private AnimalInsertionCompositeValidator animalInsertionCompositeValidator;
     @Mock
     private ZoneIdValidator zoneIdValidator;
     @InjectMocks
@@ -74,7 +74,7 @@ class AnimalServiceTest {
             animal.setAnimalType(animalType);
             animal.setId(1);
 
-            when(animalRepository.findByZone_Id(anyInt(), any()))
+            when(animalRepository.findByZoneId(anyInt(), any()))
                     .thenReturn(List.of(animal));
             List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, null, null, null, null);
             assertEquals(1, existingAnimals.size());
