@@ -102,7 +102,7 @@ class AnimalServiceTest {
             animal.setAnimalType(animalType);
             animal.setId(1);
 
-            when(animalRepository.findByName(anyString(), any()))
+            when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
                     .thenReturn(List.of(animal));
             List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(zone.getId(), ANIMAL_NAME, null, null);
             assertEquals(1, existingAnimals.size());
