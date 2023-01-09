@@ -44,9 +44,10 @@ public class AnimalService {
         return animalRepository.findByZoneId(zoneId, pageable);
     }
 
-    public List<ExistingAnimal> getAnimalsByName(String animalName, Integer size, Integer page) {
+    public List<ExistingAnimal> getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
+        zoneIdValidator.validate(zoneId);
         Pageable pageable = PageableConfigurator.preparePageable(size, page, null, null);
-        List<Animal> animalList = animalRepository.findByName(animalName, pageable);
+        List<Animal> animalList = animalRepository.findByNameAndZoneId(animalName, zoneId, pageable);
         return convertModelToDto(animalList);
     }
 

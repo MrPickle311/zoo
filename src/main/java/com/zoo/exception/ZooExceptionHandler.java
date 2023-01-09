@@ -77,13 +77,13 @@ public class ZooExceptionHandler {
                 .build();
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler(Exception.class)
-    public Error handleUnknownException(Exception exception) {
-        log.warn("Internal server error: {}", exception.getMessage());
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NumberFormatException.class)
+    public Error handleNumberFormatException(NumberFormatException exception) {
+        log.warn("Cannot cast string to integer : {}", exception.getMessage());
         return Error.builder()
-                .code(ErrorCode.UNKNOWN_ERROR)
-                .description("Internal server error")
+                .code(ErrorCode.INVALID_INPUT_DATA)
+                .description("Cannot cast string to integer " + exception.getMessage())
                 .build();
     }
 }

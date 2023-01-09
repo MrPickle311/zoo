@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AnimalRepository extends PagingAndSortingRepository<Animal, Integer> {
+    List<Animal> findByNameAndZoneId(String name, int id, Pageable pageable);
     List<Animal> findByZoneId(int zoneId, Pageable pageable);
     boolean existsByZoneId(int zoneId);
     List<Animal> findByName(String name, Pageable pageable);

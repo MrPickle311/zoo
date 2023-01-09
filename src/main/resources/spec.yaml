@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: Zoo API
   description: CRUD operations to interact with ZOO system
-  version: 1.0.0
+  version: 2.0.0
 servers:
   - url: 'https'
 
@@ -42,7 +42,7 @@ paths:
                   $ref: "#/components/examples/InvalidInputDataAutomated"
         '500':
           $ref: "#/components/responses/ServerError"
-  /animals/{zoneId}:
+  /zones/{zoneId}/animals:
     post:
       tags:
         - zoo
@@ -126,15 +126,17 @@ paths:
                   $ref: "#/components/examples/ZoneNotFound"
         '500':
           $ref: "#/components/responses/ServerError"
-  /animals:
+  /zones/{zoneId}/animals/{animalName}:
     get:
       tags:
         - zoo
       operationId: getAnimalsByName
+      description: Gets all animals with given
       parameters:
+        - $ref: "#/components/parameters/zoneId"
         - $ref: "#/components/parameters/size"
         - $ref: "#/components/parameters/page"
-        - in: query
+        - in: path
           name: animalName
           required: true
           description: Animal name which should be a single word
@@ -144,7 +146,7 @@ paths:
             example: "Nancy"
       responses:
         '200':
-          description: Successfully acquired the animals for given name
+          description: Successfully acquired the animals for given name and zone
           content:
             application/json:
               schema:
@@ -160,9 +162,18 @@ paths:
               examples:
                 InvalidInputDataAutomated:
                   $ref: "#/components/examples/InvalidInputDataAutomated"
+        '404':
+          description: Related entity not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ZoneNotFound:
+                  $ref: "#/components/examples/ZoneNotFound"
         '500':
           $ref: "#/components/responses/ServerError"
-  /animals/types:
+  /zones/animal-types:
     post:
       tags:
         - zoo
@@ -323,6 +334,7 @@ components:
         enum:
           - ASC
           - DESC
+        pattern: '^(ASC|DESC)$'
   schemas:
     ZoneCreationDto:
       type: object
@@ -348,6 +360,7 @@ components:
           type: integer
           nullable: false
           minimum: 1
+          maximum: 99
           description: Amount of food which is required by animal per day
     AnimalAssigmentDto:
       type: object
@@ -357,6 +370,7 @@ components:
           nullable: false
           example: "Nancy"
           description: Animal's name. Multiple animals may have that same name
+          pattern: '^[A-Za-z]+$'
         type:
           type: string
           nullable: false

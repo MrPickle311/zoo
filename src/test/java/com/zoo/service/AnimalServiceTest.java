@@ -104,7 +104,7 @@ class AnimalServiceTest {
 
             when(animalRepository.findByName(anyString(), any()))
                     .thenReturn(List.of(animal));
-            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(ANIMAL_NAME, null, null);
+            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(zone.getId(), ANIMAL_NAME, null, null);
             assertEquals(1, existingAnimals.size());
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
