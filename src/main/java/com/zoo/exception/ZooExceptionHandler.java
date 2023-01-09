@@ -27,13 +27,13 @@ public class ZooExceptionHandler {
                 .build();
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DataIntegrityException.class)
-    public Error handleDataIntegrityException(DataIntegrityException exception) {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public Error handleDataIntegrityException(NotFoundException exception) {
         log.warn("Attempt to violate data integrity: {}", exception.getErrorCode());
         return Error.builder()
                 .code(exception.getErrorCode())
-                .description("Attempt to violate data integrity")
+                .description("Requested data not found")
                 .build();
     }
 
@@ -63,7 +63,7 @@ public class ZooExceptionHandler {
         log.warn("Passed not valid data: {}", exception.getMessage());
         return Error.builder()
                 .code(ErrorCode.INVALID_INPUT_DATA)
-                .description(exception.getConstraintViolations().toString())
+                .description(exception.getMessage())
                 .build();
     }
 
@@ -74,6 +74,16 @@ public class ZooExceptionHandler {
         return Error.builder()
                 .code(exception.getErrorCode())
                 .description("Zoo has not any zone")
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception.class)
+    public Error handleUnknownException(Exception exception) {
+        log.warn("Internal server error: {}", exception.getMessage());
+        return Error.builder()
+                .code(ErrorCode.UNKNOWN_ERROR)
+                .description("Internal server error")
                 .build();
     }
 }

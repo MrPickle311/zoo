@@ -17,7 +17,7 @@ https://app.swaggerhub.com/apis/MrPickle311/Zoo/1.0.0
 How to build it:
 
 ```
-mvn clean package -DskipTests
+mvn clean package
 ```
 
 How to run tests

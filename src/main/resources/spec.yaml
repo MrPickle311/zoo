@@ -28,7 +28,18 @@ paths:
               schema:
                 $ref: "#/components/schemas/ExistingZone"
         '400':
-          $ref: "#/components/responses/ClientError"
+          description: Data validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                AlreadyExists:
+                  $ref: "#/components/examples/AlreadyExists"
+                InvalidInputData:
+                  $ref: "#/components/examples/InvalidInputData"
+                InvalidInputDataAutomated:
+                  $ref: "#/components/examples/InvalidInputDataAutomated"
         '500':
           $ref: "#/components/responses/ServerError"
   /animals/{zoneId}:
@@ -51,7 +62,27 @@ paths:
                 $ref: "#/components/schemas/ExistingAnimal"
           description: Created animal and assigned it to the zone
         '400':
-          $ref: "#/components/responses/ClientError"
+          description: Data validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInputData:
+                  $ref: "#/components/examples/InvalidInputData"
+                InvalidInputDataAutomated:
+                  $ref: "#/components/examples/InvalidInputDataAutomated"
+        '404':
+          description: Related entity not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ZoneNotFound:
+                  $ref: "#/components/examples/ZoneNotFound"
+                AnimalTypeNotFound:
+                  $ref: "#/components/examples/AnimalTypeNotFound"
         '500':
           $ref: "#/components/responses/ServerError"
     get:
@@ -74,7 +105,25 @@ paths:
                 items:
                   $ref: "#/components/schemas/ExistingAnimal"
         '400':
-          $ref: "#/components/responses/ClientError"
+          description: Data validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ParametersValidationFailed:
+                  $ref: "#/components/examples/ZoneNotFound"
+                InvalidInputDataAutomated:
+                  $ref: "#/components/examples/InvalidInputDataAutomated"
+        '404':
+          description: Related entity not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                ZoneNotFound:
+                  $ref: "#/components/examples/ZoneNotFound"
         '500':
           $ref: "#/components/responses/ServerError"
   /animals:
@@ -92,9 +141,10 @@ paths:
           schema:
             type: string
             pattern: '^[A-Za-z]+$'
+            example: "Nancy"
       responses:
         '200':
-          description: Successfully acquired the animals for given zone and name
+          description: Successfully acquired the animals for given name
           content:
             application/json:
               schema:
@@ -102,7 +152,14 @@ paths:
                 items:
                   $ref: "#/components/schemas/ExistingAnimal"
         '400':
-          $ref: "#/components/responses/ClientError"
+          description: Data validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInputDataAutomated:
+                  $ref: "#/components/examples/InvalidInputDataAutomated"
         '500':
           $ref: "#/components/responses/ServerError"
   /animals/types:
@@ -123,28 +180,14 @@ paths:
               schema:
                 $ref: "#/components/schemas/ExistingAnimalType"
         '400':
-          $ref: "#/components/responses/ClientError"
-        '500':
-          $ref: "#/components/responses/ServerError"
-  /animals/types:
-    post:
-      tags:
-        - zoo
-      operationId: addAnimalType
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AnimalTypeCreationDto"
-      responses:
-        '201':
-          description: Successfully created animal type
+          description: Data validation error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ExistingAnimalType"
-        '400':
-          $ref: "#/components/responses/ClientError"
+                $ref: "#/components/schemas/Error"
+              examples:
+                InvalidInputDataAutomated:
+                  $ref: "#/components/examples/InvalidInputDataAutomated"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/requires-most-food:
@@ -162,7 +205,13 @@ paths:
                 $ref: "#/components/schemas/ExistingZoneFoodReport"
         '404':
           description: "Zoo does not contain any zone. Cannot download the report"
-          $ref: "#/components/responses/ClientError"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NoZonesPresentInZoo:
+                  $ref: "#/components/examples/NoZonesPresentInZoo"
         '500':
           $ref: "#/components/responses/ServerError"
   /zones/least-animals:
@@ -180,24 +229,55 @@ paths:
                 $ref: "#/components/schemas/ExistingZoneAnimalsReport"
         '404':
           description: "Zoo does not contain any zone. Cannot download the report"
-          $ref: "#/components/responses/ClientError"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                NoZonesPresentInZoo:
+                  $ref: "#/components/examples/NoZonesPresentInZoo"
         '500':
           $ref: "#/components/responses/ServerError"
 
 components:
-  responses:
-    ClientError:
-      description: Client error
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
-    ServerError:
-      description: Server error
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/Error"
+  examples:
+    AlreadyExists:
+      description: Occurs when entity with given identifier exists in the system
+      value:
+        code: ALREADY_EXISTS
+        description: "Business data validation failed"
+    InvalidInputData:
+      description: Occurs when manual data validation fails
+      value:
+        code: INVALID_INPUT_DATA
+        description: "Business data validation failed"
+    InvalidInputDataAutomated:
+      description: "Occurs when automatic data validation fails. 
+      This comes when for example 'nullable: false' or 'pattern: ^[A-Za-z]+$' check fails. 
+      This is specific to the schema, so read schema definitions to get know what kind of failures may occur"
+      value:
+        code: INVALID_INPUT_DATA
+        description: "addAnimal.zoneId: must be greater than or equal to 0"
+    UnknownError:
+      description: Occurs when could not handle error
+      value:
+        code: UNKNOWN_ERROR
+        description: "Internal server error"
+    ZoneNotFound:
+      description: Occurs when it's not possible to find zone with given id or name
+      value:
+        code: ZONE_NOT_FOUND
+        description: "Requested data not found"
+    AnimalTypeNotFound:
+      description: Occurs when it's not possible to find animal type with given id or name
+      value:
+        code: ANIMAL_TYPE_NOT_FOUND
+        description: "Requested data not found"
+    NoZonesPresentInZoo:
+      description: Occurs when there is not any zone in the system
+      value:
+        code: NO_ZONES_PRESENT_IN_ZOO
+        description: "Zoo has not any zone"
   parameters:
     zoneId:
       in: path
@@ -367,3 +447,19 @@ components:
           example: "addAnimal.zoneId: must be greater than or equal to 0"
       required:
         - code
+  responses:
+    ClientError:
+      description: Client error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            UnknownError:
+              $ref: "#/components/examples/UnknownError"

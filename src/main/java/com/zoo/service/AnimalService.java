@@ -1,6 +1,6 @@
 package com.zoo.service;
 
-import com.zoo.exception.DataIntegrityException;
+import com.zoo.exception.NotFoundException;
 import com.zoo.model.Animal;
 import com.zoo.model.AnimalType;
 import com.zoo.model.Zone;
@@ -73,11 +73,11 @@ public class AnimalService {
 
     private AnimalType findAnimalTypeByName(String animalTypeName) {
         return animalTypeRepository.findByNameIgnoreCaseAllIgnoreCase(animalTypeName)
-                .orElseThrow(() -> new DataIntegrityException(ErrorCode.ANIMAL_TYPE_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.ANIMAL_TYPE_NOT_FOUND));
     }
 
     private Zone findZoneById(Integer zoneId) {
         return zoneRepository.findById(zoneId)
-                .orElseThrow(() -> new DataIntegrityException(ErrorCode.ZONE_NOT_FOUND));
+                .orElseThrow(() -> new NotFoundException(ErrorCode.ZONE_NOT_FOUND));
     }
 }
