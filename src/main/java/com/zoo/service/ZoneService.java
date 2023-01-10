@@ -10,6 +10,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
+
 @Service
 @RequiredArgsConstructor
 public class ZoneService {
@@ -25,21 +27,17 @@ public class ZoneService {
         return save(newZone);
     }
 
-    private Zone convertDtoToModel(ZoneCreationDto zoneCreationDto) {
-        return modelMapper.map(zoneCreationDto, Zone.class);
-    }
-
     public ExistingZoneFoodReport getZoneWhichRequiresMostFood() {
         return zoneRepository.findAll().stream()
                 .map(z -> modelMapper.map(z, ExistingZoneFoodReport.class))
-                .min((r1, r2) -> r2.getCurrentAmountOfRequiredFood().compareTo(r1.getCurrentAmountOfRequiredFood()))
+                .max(Comparator.comparing(ExistingZoneFoodReport::getCurrentAmountOfRequiredFood))
                 .orElseThrow(() -> new NoZonesPresentInZooException(ErrorCode.NO_ZONES_PRESENT_IN_ZOO));
     }
 
     public ExistingZoneAnimalsReport getZoneWhereLiveLeastAnimals() {
         return zoneRepository.findAll().stream()
                 .map(z -> modelMapper.map(z, ExistingZoneAnimalsReport.class))
-                .max((r1, r2) -> r2.getAnimalsCount().compareTo(r1.getAnimalsCount()))
+                .min(Comparator.comparing(ExistingZoneAnimalsReport::getAnimalsCount))
                 .orElseThrow(() -> new NoZonesPresentInZooException(ErrorCode.NO_ZONES_PRESENT_IN_ZOO));
     }
 

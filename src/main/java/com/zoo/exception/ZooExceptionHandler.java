@@ -38,16 +38,6 @@ public class ZooExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(DataIntegrityException.class)
-    public Error handleDataIntegrityException(DataIntegrityException exception) {
-        log.warn("Attempt to violate data integrity: {}", exception.getErrorCode());
-        return Error.builder()
-                .code(exception.getErrorCode())
-                .description("Attempt to violate data integrity")
-                .build();
-    }
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Error handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         log.warn("Data validation failed with error code: {}", exception.getMessage());
