@@ -362,6 +362,9 @@ components:
           minimum: 1
           maximum: 99
           description: Amount of food which is required by animal per day
+      required:
+        - name
+        - requiredFoodPerDay
     AnimalAssigmentDto:
       type: object
       properties:

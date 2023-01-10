@@ -32,9 +32,9 @@ import static org.mockito.Mockito.when;
 class AnimalServiceTest {
 
     public static final String SAMPLE_ZONE = "SampleZone";
-    public static final String SAMPLE_ANIMAL_TYPE = "Elephant";
+    public static final String SAMPLE_ANIMAL_TYPE = "SampleAnimalTypeName";
     public static final String SAMPLE_ANIMAL_NAME = "SampleAnimalName";
-    public static final String ANIMAL_NAME = "Harry";
+    public static final String ANIMAL_NAME = "SampleAnimalName";
 
     @Spy
     private ModelMapper modelMapper;
@@ -60,7 +60,7 @@ class AnimalServiceTest {
         }
 
         @Test
-        void shouldGetAnimalsAndConvertToExternalDto() {
+        void shouldGetAnimals() {
             var zone = new Zone();
             zone.setName(SAMPLE_ZONE);
             zone.setId(1);
@@ -85,6 +85,51 @@ class AnimalServiceTest {
             assertEquals(animal.getId(), existingAnimal.getId());
             assertEquals(animal.getName(), existingAnimal.getName());
             assertEquals(animal.getZone().getName(), existingAnimal.getZone());
+        }
+
+        @Test
+        void shouldGetAnimalsWithPageable() {
+            var zone = new Zone();
+            zone.setName(SAMPLE_ZONE);
+            zone.setId(1);
+            var animalType = new AnimalType();
+            animalType.setName(SAMPLE_ANIMAL_TYPE);
+            animalType.setId(1);
+            animalType.setRequiredFoodPerDay(50);
+            var animal = new Animal();
+            animal.setZone(zone);
+            animal.setName(SAMPLE_ANIMAL_NAME);
+            animal.setAnimalType(animalType);
+            animal.setId(1);
+
+            when(animalRepository.findByZoneId(anyInt(), any()))
+                    .thenReturn(List.of(animal));
+            List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, 10, 1, true, "ASC");
+            assertEquals(1, existingAnimals.size());
+
+            ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
+
+            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType());
+            assertEquals(animal.getId(), existingAnimal.getId());
+            assertEquals(animal.getName(), existingAnimal.getName());
+            assertEquals(animal.getZone().getName(), existingAnimal.getZone());
+        }
+
+        @Test
+        void shouldReturnEmptyList() {
+            when(animalRepository.findByZoneId(anyInt(), any()))
+                    .thenReturn(List.of());
+            List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, 10, 1, true, "ASC");
+            assertEquals(0, existingAnimals.size());
+        }
+    }
+
+    @Nested
+    class WhenGettingAnimalsByName {
+
+        @BeforeEach
+        void setUp() {
+            ModelMapperConfiguration.prepareModelMapper(modelMapper);
         }
 
         @Test
@@ -114,6 +159,42 @@ class AnimalServiceTest {
             assertEquals(animal.getName(), existingAnimal.getName());
             assertEquals(animal.getZone().getName(), existingAnimal.getZone());
         }
+
+        @Test
+        void shouldGetAnimalsByNameWithPageable() {
+            var zone = new Zone();
+            zone.setName(SAMPLE_ZONE);
+            zone.setId(1);
+            var animalType = new AnimalType();
+            animalType.setName(SAMPLE_ANIMAL_TYPE);
+            animalType.setId(1);
+            animalType.setRequiredFoodPerDay(50);
+            var animal = new Animal();
+            animal.setZone(zone);
+            animal.setName(SAMPLE_ANIMAL_NAME);
+            animal.setAnimalType(animalType);
+            animal.setId(1);
+
+            when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
+                    .thenReturn(List.of(animal));
+            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(1, animal.getName(), 10, 1);
+            assertEquals(1, existingAnimals.size());
+
+            ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
+
+            assertEquals(animal.getAnimalType().getName(), existingAnimal.getType());
+            assertEquals(animal.getId(), existingAnimal.getId());
+            assertEquals(animal.getName(), existingAnimal.getName());
+            assertEquals(animal.getZone().getName(), existingAnimal.getZone());
+        }
+
+        @Test
+        void shouldReturnEmptyList() {
+            when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
+                    .thenReturn(List.of());
+            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(1, SAMPLE_ANIMAL_NAME, 10, 1);
+            assertEquals(0, existingAnimals.size());
+        }
     }
 
     @Nested
@@ -142,6 +223,11 @@ class AnimalServiceTest {
 
             assertEquals(animal.getId(), existingAnimal.getId());
             assertEquals(animal.getName(), existingAnimal.getName());
+        }
+
+        @Test
+        void shouldThrowIllegalArgumentExceptionAWhenInsertionBodyIsNull() {
+            assertThrows(IllegalArgumentException.class, () -> underTest.addAnimal(1, null));
         }
     }
 }
