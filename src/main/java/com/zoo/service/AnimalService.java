@@ -40,11 +40,6 @@ public class AnimalService {
         return convertModelToDto(animalList);
     }
 
-    private List<Animal> findAnimalsByZoneId(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
-        Pageable pageable = PageableConfigurator.preparePageable(size, page, Boolean.TRUE.equals(shouldSortByName) ? NAME : null, sortDirection);
-        return animalRepository.findByZoneId(zoneId, pageable);
-    }
-
     public ExistingAnimalsList getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
         zoneIdValidator.validate(zoneId);
         Pageable pageable = PageableConfigurator.preparePageable(size, page, null, null);
@@ -61,12 +56,18 @@ public class AnimalService {
         return save(animal);
     }
 
+    private List<Animal> findAnimalsByZoneId(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
+        Pageable pageable = PageableConfigurator.preparePageable(size, page, Boolean.TRUE.equals(shouldSortByName) ? NAME : null, sortDirection);
+        return animalRepository.findByZoneId(zoneId, pageable);
+    }
+
     private ExistingAnimalsList convertModelToDto(List<Animal> animalList) {
         var convertedList = animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
         return ExistingAnimalsList.builder()
                 .animalsList(convertedList)
                 .build();
     }
+
     private Animal convertDtoToModel(AnimalAssigmentDto animalAssigmentDto) {
         return modelMapper.map(animalAssigmentDto, Animal.class);
     }
