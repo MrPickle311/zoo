@@ -197,6 +197,27 @@ paths:
                   $ref: "#/components/examples/InvalidInputDataAutomated"
         '500':
           $ref: "#/components/responses/ServerError"
+  /animals/types:
+    post:
+      tags:
+        - zoo
+      operationId: addAnimalType
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalTypeCreationDto"
+      responses:
+        '201':
+          description: Successfully created animal type
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExistingAnimalType"
+        '400':
+          $ref: "#/components/responses/ClientError"
+        '500':
+          $ref: "#/components/responses/ServerError"
   /zones/requires-most-food:
     get:
       tags:

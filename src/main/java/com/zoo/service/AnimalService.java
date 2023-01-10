@@ -67,7 +67,6 @@ public class AnimalService {
                 .animalsList(convertedList)
                 .build();
     }
-
     private Animal convertDtoToModel(AnimalAssigmentDto animalAssigmentDto) {
         return modelMapper.map(animalAssigmentDto, Animal.class);
     }
