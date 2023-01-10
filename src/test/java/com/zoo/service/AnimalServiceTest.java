@@ -76,7 +76,9 @@ class AnimalServiceTest {
 
             when(animalRepository.findByZoneId(anyInt(), any()))
                     .thenReturn(List.of(animal));
-            List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, null, null, null, null);
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimals(1, null, null, null, null)
+                    .getAnimalsList();
             assertEquals(1, existingAnimals.size());
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
@@ -104,7 +106,9 @@ class AnimalServiceTest {
 
             when(animalRepository.findByZoneId(anyInt(), any()))
                     .thenReturn(List.of(animal));
-            List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, 10, 1, true, "ASC");
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimals(1, 10, 1, true, "ASC")
+                    .getAnimalsList();
             assertEquals(1, existingAnimals.size());
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
@@ -119,7 +123,9 @@ class AnimalServiceTest {
         void shouldReturnEmptyList() {
             when(animalRepository.findByZoneId(anyInt(), any()))
                     .thenReturn(List.of());
-            List<ExistingAnimal> existingAnimals = underTest.getAnimals(1, 10, 1, true, "ASC");
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimals(1, 10, 1, true, "ASC")
+                    .getAnimalsList();
             assertEquals(0, existingAnimals.size());
         }
     }
@@ -149,7 +155,9 @@ class AnimalServiceTest {
 
             when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
                     .thenReturn(List.of(animal));
-            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(zone.getId(), ANIMAL_NAME, null, null);
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimalsByName(zone.getId(), ANIMAL_NAME, null, null)
+                    .getAnimalsList();
             assertEquals(1, existingAnimals.size());
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
@@ -177,7 +185,9 @@ class AnimalServiceTest {
 
             when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
                     .thenReturn(List.of(animal));
-            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(1, animal.getName(), 10, 1);
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimalsByName(1, animal.getName(), 10, 1)
+                    .getAnimalsList();
             assertEquals(1, existingAnimals.size());
 
             ExistingAnimal existingAnimal = existingAnimals.stream().findFirst().get();
@@ -192,7 +202,9 @@ class AnimalServiceTest {
         void shouldReturnEmptyList() {
             when(animalRepository.findByNameAndZoneId(anyString(), anyInt(), any()))
                     .thenReturn(List.of());
-            List<ExistingAnimal> existingAnimals = underTest.getAnimalsByName(1, SAMPLE_ANIMAL_NAME, 10, 1);
+            List<ExistingAnimal> existingAnimals = underTest
+                    .getAnimalsByName(1, SAMPLE_ANIMAL_NAME, 10, 1)
+                    .getAnimalsList();
             assertEquals(0, existingAnimals.size());
         }
     }

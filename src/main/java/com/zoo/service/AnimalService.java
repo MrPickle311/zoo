@@ -7,6 +7,7 @@ import com.zoo.model.Zone;
 import com.zoo.openapi.model.AnimalAssigmentDto;
 import com.zoo.openapi.model.ErrorCode;
 import com.zoo.openapi.model.ExistingAnimal;
+import com.zoo.openapi.model.ExistingAnimalsList;
 import com.zoo.repository.AnimalRepository;
 import com.zoo.repository.AnimalTypeRepository;
 import com.zoo.repository.ZoneRepository;
@@ -33,7 +34,7 @@ public class AnimalService {
     private final ZoneIdValidator zoneIdValidator;
     private final AnimalInsertionCompositeValidator animalInsertionCompositeValidator;
 
-    public List<ExistingAnimal> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
+    public ExistingAnimalsList getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
         zoneIdValidator.validate(zoneId);
         List<Animal> animalList = findAnimalsByZoneId(zoneId, size, page, shouldSortByName, sortDirection);
         return convertModelToDto(animalList);
@@ -44,7 +45,7 @@ public class AnimalService {
         return animalRepository.findByZoneId(zoneId, pageable);
     }
 
-    public List<ExistingAnimal> getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
+    public ExistingAnimalsList getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
         zoneIdValidator.validate(zoneId);
         Pageable pageable = PageableConfigurator.preparePageable(size, page, null, null);
         List<Animal> animalList = animalRepository.findByNameAndZoneId(animalName, zoneId, pageable);
@@ -60,8 +61,11 @@ public class AnimalService {
         return save(animal);
     }
 
-    private List<ExistingAnimal> convertModelToDto(List<Animal> animalList) {
-        return animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
+    private ExistingAnimalsList convertModelToDto(List<Animal> animalList) {
+        var convertedList = animalList.stream().map(a -> modelMapper.map(a, ExistingAnimal.class)).toList();
+        return ExistingAnimalsList.builder()
+                .animalsList(convertedList)
+                .build();
     }
 
     private Animal convertDtoToModel(AnimalAssigmentDto animalAssigmentDto) {

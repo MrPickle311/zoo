@@ -101,9 +101,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ExistingAnimal"
+                $ref: "#/components/schemas/ExistingAnimalsList"
         '400':
           description: Data validation error
           content:
@@ -150,9 +148,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/ExistingAnimal"
+                $ref: "#/components/schemas/ExistingAnimalsList"
         '400':
           description: Data validation error
           content:
@@ -396,6 +392,13 @@ components:
           type: string
           example: "FirstZone"
           description: Animal's zone
+    ExistingAnimalsList:
+      type: object
+      properties:
+        animalsList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExistingAnimal"
     ExistingAnimalType:
       type: object
       allOf:

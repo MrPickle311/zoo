@@ -12,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -43,13 +41,13 @@ public class ZoneController implements ZonesApi {
     }
 
     @Override
-    public ResponseEntity<List<ExistingAnimal>> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
+    public ResponseEntity<ExistingAnimalsList> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
         log.info("Acquiring animals from zone: {}", zoneId);
         return ResponseEntity.status(HttpStatus.OK).body(animalService.getAnimals(zoneId, size, page, shouldSortByName, sortDirection));
     }
 
     @Override
-    public ResponseEntity<List<ExistingAnimal>> getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
+    public ResponseEntity<ExistingAnimalsList> getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
         log.info("Acquiring animals from zone: {} with name: {}", zoneId, animalName);
         return ResponseEntity.status(HttpStatus.OK).body(animalService.getAnimalsByName(zoneId, animalName, size, page));
     }
