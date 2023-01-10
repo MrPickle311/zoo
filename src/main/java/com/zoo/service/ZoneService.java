@@ -25,10 +25,6 @@ public class ZoneService {
         return save(newZone);
     }
 
-    private Zone convertDtoToModel(ZoneCreationDto zoneCreationDto) {
-        return modelMapper.map(zoneCreationDto, Zone.class);
-    }
-
     public ExistingZoneFoodReport getZoneWhichRequiresMostFood() {
         return zoneRepository.findAll().stream()
                 .map(z -> modelMapper.map(z, ExistingZoneFoodReport.class))
