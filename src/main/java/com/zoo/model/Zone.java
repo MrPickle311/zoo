@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
-@Table(name = "zones")
+@Table(name = "zone")
 @Getter
 @Setter
 public class Zone {

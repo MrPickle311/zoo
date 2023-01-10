@@ -63,6 +63,11 @@ class ZoneServiceTest {
             var result = underTest.addZone(zoneCreationDto);
             assertEquals(SAMPLE_NAME, result.getName());
         }
+
+        @Test
+        void shouldThrowIllegalArgumentExceptionAWhenInsertionBodyIsNull() {
+            assertThrows(IllegalArgumentException.class, () -> underTest.addZone(null));
+        }
     }
 
     @Nested

@@ -1,10 +1,9 @@
 package com.zoo.controller;
 
 import com.zoo.openapi.api.ZonesApi;
-import com.zoo.openapi.model.ExistingZone;
-import com.zoo.openapi.model.ExistingZoneAnimalsReport;
-import com.zoo.openapi.model.ExistingZoneFoodReport;
-import com.zoo.openapi.model.ZoneCreationDto;
+import com.zoo.openapi.model.*;
+import com.zoo.service.AnimalService;
+import com.zoo.service.AnimalTypeService;
 import com.zoo.service.ZoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ZoneController implements ZonesApi {
 
     private final ZoneService zoneService;
+    private final AnimalService animalService;
+    private final AnimalTypeService animalTypeService;
 
     @Override
     public ResponseEntity<ExistingZone> addZone(ZoneCreationDto zoneCreationDto) {
@@ -37,5 +38,29 @@ public class ZoneController implements ZonesApi {
     public ResponseEntity<ExistingZoneAnimalsReport> zoneWhereLiveLeastAnimals() {
         log.info("Acquiring zone where live least animals");
         return ResponseEntity.status(HttpStatus.OK).body(zoneService.getZoneWhereLiveLeastAnimals());
+    }
+
+    @Override
+    public ResponseEntity<ExistingAnimalsList> getAnimals(Integer zoneId, Integer size, Integer page, Boolean shouldSortByName, String sortDirection) {
+        log.info("Acquiring animals from zone: {}", zoneId);
+        return ResponseEntity.status(HttpStatus.OK).body(animalService.getAnimals(zoneId, size, page, shouldSortByName, sortDirection));
+    }
+
+    @Override
+    public ResponseEntity<ExistingAnimalsList> getAnimalsByName(Integer zoneId, String animalName, Integer size, Integer page) {
+        log.info("Acquiring animals from zone: {} with name: {}", zoneId, animalName);
+        return ResponseEntity.status(HttpStatus.OK).body(animalService.getAnimalsByName(zoneId, animalName, size, page));
+    }
+
+    @Override
+    public ResponseEntity<ExistingAnimal> addAnimal(Integer zoneId, AnimalAssigmentDto animalAssigmentDto) {
+        log.info("Adding animal to zone: {}, with: {}", zoneId, animalAssigmentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(animalService.addAnimal(zoneId, animalAssigmentDto));
+    }
+
+    @Override
+    public ResponseEntity<ExistingAnimalType> addAnimalType(AnimalTypeCreationDto animalTypeCreationDto) {
+        log.info("Adding animal type with: {}", animalTypeCreationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(animalTypeService.addAAnimalType(animalTypeCreationDto));
     }
 }

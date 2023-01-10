@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -58,6 +59,11 @@ class AnimalTypeServiceTest {
             var result = underTest.addAAnimalType(animalTypeCreationDto);
             assertEquals(animalType.getName(), result.getName());
             assertEquals(animalType.getRequiredFoodPerDay(), result.getRequiredFoodPerDay());
+        }
+
+        @Test
+        void shouldThrowIllegalArgumentExceptionAWhenInsertionBodyIsNull() {
+            assertThrows(IllegalArgumentException.class, () -> underTest.addAAnimalType(null));
         }
     }
 }

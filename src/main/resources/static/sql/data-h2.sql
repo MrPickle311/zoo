@@ -1,4 +1,4 @@
-INSERT INTO zones (name)
+INSERT INTO zone (name)
 VALUES ('FirstZone'),
        ('SecondZone'),
        ('ThirdZone');
