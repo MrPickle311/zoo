@@ -25,14 +25,6 @@ public class ZoneService {
         return save(newZone);
     }
 
-    private ExistingZone save(Zone newZone) {
-        return modelMapper.map(zoneRepository.save(newZone), ExistingZone.class);
-    }
-
-    private Zone convertDtoToModel(ZoneCreationDto zoneCreationDto) {
-        return modelMapper.map(zoneCreationDto, Zone.class);
-    }
-
     public ExistingZoneFoodReport getZoneWhichRequiresMostFood() {
         return zoneRepository.findAll().stream()
                 .map(z -> modelMapper.map(z, ExistingZoneFoodReport.class))
@@ -45,5 +37,13 @@ public class ZoneService {
                 .map(z -> modelMapper.map(z, ExistingZoneAnimalsReport.class))
                 .max((r1, r2) -> r2.getAnimalsCount().compareTo(r1.getAnimalsCount()))
                 .orElseThrow(() -> new NoZonesPresentInZooException(ErrorCode.NO_ZONES_PRESENT_IN_ZOO));
+    }
+
+    private ExistingZone save(Zone newZone) {
+        return modelMapper.map(zoneRepository.save(newZone), ExistingZone.class);
+    }
+
+    private Zone convertDtoToModel(ZoneCreationDto zoneCreationDto) {
+        return modelMapper.map(zoneCreationDto, Zone.class);
     }
 }

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS zones
+CREATE TABLE IF NOT EXISTS zone
 (
     id   integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name text    NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS animal
 
 ALTER TABLE IF EXISTS animal
     ADD FOREIGN KEY (zone_id)
-        REFERENCES zones (id);
+        REFERENCES zone (id);
 
 ALTER TABLE IF EXISTS animal
     ADD FOREIGN KEY (animal_type_id)

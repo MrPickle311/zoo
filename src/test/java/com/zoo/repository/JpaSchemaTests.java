@@ -21,8 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class JpaSchemaTests {
 
-    public static final String SAMPLE_ZONE = "FunnyZone";
-    public static final String SAMPLE_ANIMAL_NAME = "Harry";
+    public static final String SAMPLE_ZONE = "SampleZone";
+    public static final String SAMPLE_ANIMAL_NAME = "SampleAnimalName";
+    public static final String SAMPLE_ANIMAL_TYPE = "SampleAnimalType";
     @Autowired
     private ZoneRepository zoneRepository;
     @Autowired
@@ -114,8 +115,15 @@ class JpaSchemaTests {
         @Test
         void shouldFindAnimalsByName() {
             Pageable pageable = PageRequest.of(0, 20);
-            var result = animalRepository.findByName( SAMPLE_ANIMAL_NAME, pageable);
+            var result = animalRepository.findByName( "Harry", pageable);
             assertEquals(1, result.size());
+        }
+
+        @Test
+        void shouldNotFindAnimalsByNameWhenCaseDoesNotMatch() {
+            Pageable pageable = PageRequest.of(0, 20);
+            var result = animalRepository.findByName( "harry", pageable);
+            assertEquals(0, result.size());
         }
     }
 
@@ -126,9 +134,33 @@ class JpaSchemaTests {
         void shouldAddAnimalType(){
             var animalType = new AnimalType();
             animalType.setRequiredFoodPerDay(50);
-            animalType.setName("Pig");
+            animalType.setName(SAMPLE_ANIMAL_TYPE);
             var result = animalTypeRepository.save(animalType);
             assertEquals(animalType.getName(), result.getName());
+        }
+
+        @Test
+        void shouldNotAllowNullAnimalType(){
+            var animalType = new AnimalType();
+            animalType.setRequiredFoodPerDay(50);
+            animalType.setName(null);
+            assertThrows(ConstraintViolationException.class,() -> animalTypeRepository.save(animalType));
+        }
+
+        @Test
+        void shouldNotAllowNumberLessThanMinimum(){
+            var animalType = new AnimalType();
+            animalType.setRequiredFoodPerDay(0);
+            animalType.setName(SAMPLE_ANIMAL_TYPE);
+            assertThrows(ConstraintViolationException.class,() -> animalTypeRepository.save(animalType));
+        }
+
+        @Test
+        void shouldNotAllowNumberGreaterThanMaximum(){
+            var animalType = new AnimalType();
+            animalType.setRequiredFoodPerDay(1000);
+            animalType.setName(SAMPLE_ANIMAL_TYPE);
+            assertThrows(ConstraintViolationException.class,() -> animalTypeRepository.save(animalType));
         }
     }
 }

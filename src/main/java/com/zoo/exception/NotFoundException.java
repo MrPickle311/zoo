@@ -8,7 +8,7 @@ import java.io.Serial;
 
 @RequiredArgsConstructor
 @Getter
-public class DataIntegrityException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1234563L;
     private final ErrorCode errorCode;
